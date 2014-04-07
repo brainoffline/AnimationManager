@@ -26,13 +26,21 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{FC446C
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NugetSolution", "NugetSolution", "{39DF8F67-FDE3-435B-86DA-95A86E382239}"
 	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		LICENSE = LICENSE
 		NuGetPackage\Package.nuspec = NuGetPackage\Package.nuspec
+		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnimationManager.Portable", "AnimationManager.Portable\AnimationManager.Portable.csproj", "{6C996F92-8B49-4001-B87B-9E04F41DDA50}"
 	ProjectSection(ProjectDependencies) = postProject
 		{75C71205-36DF-4AB4-991D-D700DFA72BE0} = {75C71205-36DF-4AB4-991D-D700DFA72BE0}
 		{9B5A8CE8-858A-4977-AD61-534E532FD381} = {9B5A8CE8-858A-4977-AD61-534E532FD381}
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Images", "Images", "{0E660531-75D9-4EA3-9573-DD03EAF986C1}"
+	ProjectSection(SolutionItems) = preProject
+		Images\AnimatedHead.gif = Images\AnimatedHead.gif
 	EndProjectSection
 EndProject
 Global
