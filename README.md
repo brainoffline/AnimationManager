@@ -53,7 +53,7 @@ For the above button, it will bounce in when the screen is loaded, slowly pulsat
 
 ### Animate ListBox Items ###
 
-Here is an example of animating a ListBox
+Here is an example of animating a ListBox. The cool thing here is you can use ANY predefined animation to animate items in. Or if you are inspired, you can define your own animation.
 
 	<Page.Resources>
 		<bam:FadeInUpAnimation x:Key="ListBoxAnimation1" Delay="0.03" Duration="0.3" Distance="150" />
@@ -68,8 +68,11 @@ Here is an example of animating a ListBox
 Animations do not start until the splash screen has been dismissed.
 
 ### Navigation ###
-*Navigating* can be a pain if you want to make it pretty. You want your animations to finish before navigating away from current screen.  
-This is not yet automatic and planned for the 1.0 release.
+*Navigating* in and out of pages can be a pain if you want to make it pretty. You want your animations to finish before navigating away from current screen.  Calling the following will call all the AnimationTrigger.Close animations.
+
+	await AnimationTrigger.AnimateClose()
+ 
+This is not yet automatic and planned for a future release.
 
 ### Page Transitions ###
 Lots of cool page transitions.
@@ -96,8 +99,7 @@ Lots of cool page transitions.
 For those control freaks out there, there is also great control over animations
 
 	var sb = new Storyboard();
-	var a1 = grid.AnimateProperty<DoubleAnimationUsingKeyFrames>(
-	         "(UIElement.Projection).(PlaneProjection.RotationY)")
+	var a1 = grid.AnimateProperty<DoubleAnimationUsingKeyFrames>(AnimationProperty.TranslateX)
 	         .AddEasingKeyFrame(0, 0)
 	         .AddEasingKeyFrame(0.3, -90)
 	         .AddEasingKeyFrame(0.6, 0, new CubicEase { EasingMode = EasingMode.EaseOut});
@@ -105,3 +107,25 @@ For those control freaks out there, there is also great control over animations
 	sb.Completed += (s, a) => { };
 	sb.Begin();
 
+
+## Animation Awesomeness
+
+Just a few more features thrown in.
+
+#### Animated Spritesheets 
+
+Animation Manager includes an **AnimatedImage** control so your can use SpriteSheets to animate images.
+
+#### Animated TextBlock
+
+Animate individual characters in the **AnimatingTextBlock** control.  Create some awesome effects.
+
+#### Animation Manager
+
+Register animations with the **AnimationManager** control.  This will allow you to Pause or stop any registered storyboards.  Very useful when you have lots going on in a screen.
+
+#### Pan Control
+
+A Panning Background.  Create a *parallax* effect by having multiple panning backgrounds.
+
+ 
