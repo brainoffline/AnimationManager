@@ -1,0 +1,968 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using Windows.ApplicationModel.Activation;
+#if NETFX_CORE
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Animation;
+using Windows.Foundation;
+using Point = Windows.Foundation.Point;
+#endif
+
+#if WINDOWS_PHONE
+using System.Windows.Media.Animation;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media;
+using Point = System.Windows.Point;
+#endif
+
+
+
+namespace Brain.Animate
+{
+    public class AnimationParameters
+    {
+        public string AnimationName;
+        public double SpeedRatio;
+        public double RepeatCount;
+        public double RepeatDuration;
+        public double Delay;
+        public bool AutoReverse;
+        public bool Forever;
+
+        public AnimationParameters()
+        { }
+
+        public AnimationParameters(string animationName)
+        {
+            if (animationName.Contains('{'))
+                animationName = animationName.Replace("{", "");
+            if (animationName.Contains('}'))
+                animationName = animationName.Replace("}", "");
+
+            var values = animationName.Split(',');
+
+            AnimationName = values[0];
+            SpeedRatio = 0;
+            RepeatCount = 0;
+            RepeatDuration = 0;
+            Delay = 0;
+            AutoReverse = false;
+            Forever = false;
+
+            for (int i = 1; i < values.Count(); i++)
+            {
+                var keyvalue = values[i].Split('=');
+                if (keyvalue.Length != 2) continue;
+
+                switch (keyvalue[0].ToLower())
+                {
+                    case "speedratio":
+                        Double.TryParse(keyvalue[1], out SpeedRatio);
+                        break;
+                    case "repeatcount":
+                        Double.TryParse(keyvalue[1], out RepeatCount);
+                        break;
+                    case "repeatduration":
+                        Double.TryParse(keyvalue[1], out RepeatDuration);
+                        break;
+                    case "forever":
+                        bool.TryParse(keyvalue[1], out Forever);
+                        break;
+                    case "autoreverse":
+                        bool.TryParse(keyvalue[1], out AutoReverse);
+                        break;
+                    case "delay":
+                        Double.TryParse(keyvalue[1], out Delay);
+                        break;
+                }
+            }
+        }
+    }
+
+
+    public class AnimationManager
+    {
+        public delegate IEnumerable<Timeline> CreateAnimation(FrameworkElement element);
+
+        private readonly Dictionary<FrameworkElement, List<Storyboard>> _frameworkStoryboards = new Dictionary<FrameworkElement, List<Storyboard>>();
+
+        static AnimationManager()
+        {
+            Manager.DefineDefaultAnimations();
+        }
+
+        private static AnimationManager _manager;
+        private static AnimationManager Manager
+        {
+            get { return _manager ?? (_manager = new AnimationManager()); }
+        }
+
+
+        private static bool RegisteredSplashScreen;
+        private static ManualResetEvent _splashScreenFinished;
+
+        public static void RegisterSplashScreen(SplashScreen splashScreen)
+        {
+#if NETFX_CORE
+            lock (Manager)
+            {
+                _splashScreenFinished = new ManualResetEvent(false);
+                splashScreen.Dismissed += (sender, args) =>
+                {
+                    RegisteredSplashScreen = false;
+                    _splashScreenFinished.Set();
+                };
+                RegisteredSplashScreen = true;
+            }
+#endif
+
+#if WINDOWS_PHONE
+            lock (Manager)
+            {
+                _splashScreenFinished = new ManualResetEvent(false);
+                Task.Run(async () =>
+                {
+                    await Task.Delay(TimeSpan.FromSeconds(1.0));
+                    RegisteredSplashScreen = false;
+                    _splashScreenFinished.Set();
+                });
+                RegisteredSplashScreen = true;
+            }
+#endif
+        }
+
+        public static Task<bool> SplashScreenGone()
+        {
+            var tcs = new TaskCompletionSource<bool>();
+
+            if (!RegisteredSplashScreen)
+                tcs.SetResult(false);
+            else
+            {
+                Task.Run(() =>
+                {
+                    _splashScreenFinished.WaitOne();
+                    tcs.SetResult(true);
+                });
+            }
+            return tcs.Task;
+        }
+
+        private void AddStoryboard(FrameworkElement element, Storyboard storyboard)
+        {
+            lock (this)
+            {
+                List<Storyboard> storyboards = 
+                    _frameworkStoryboards.ContainsKey(element) ? _frameworkStoryboards[element] : new List<Storyboard>();
+                storyboards.Add(storyboard);
+                _frameworkStoryboards[element] = storyboards;
+            }
+        }
+
+        private void RemoveStoryboard(FrameworkElement element, Storyboard storyboard)
+        {
+            lock (this)
+            {
+                var storyboards = _frameworkStoryboards.ContainsKey(element) ? _frameworkStoryboards[element] : null;
+                if (storyboards == null) return;
+
+                storyboards.Remove(storyboard);
+                if (storyboards.Count == 0)
+                    _frameworkStoryboards.Remove(element);
+            }
+        }
+
+        private void StopStoryboards(FrameworkElement element)
+        {
+            lock (this)
+            {
+                var storyboards = _frameworkStoryboards.ContainsKey(element) ? _frameworkStoryboards[element] : null;
+                if (storyboards == null) return;
+
+                foreach (var storyboard in storyboards.ToArray())
+                {
+                    storyboard.Stop();
+                    storyboards.Remove(storyboard);
+                }
+                _frameworkStoryboards.Remove(element);
+            }
+            
+        }
+
+        public IEnumerable<Timeline> CreateFlashAnimation(FrameworkElement element)
+        {
+            yield return element.AnimateProperty(AnimationProperty.Opacity)
+                .AddEasingKeyFrame(0.0, 1)
+                .AddEasingKeyFrame(0.25, 0)
+                .AddEasingKeyFrame(0.5, 1)
+                .AddEasingKeyFrame(0.75, 0)
+                .AddEasingKeyFrame(1.0, 1);
+        }
+
+
+        public IEnumerable<Timeline> CreateBounceAnimation(FrameworkElement element)
+        {
+            yield return element.AnimateProperty(AnimationProperty.TranslateY)
+                .AddEasingKeyFrame(0.0, 0)
+                .AddEasingKeyFrame(0.2, 0)
+                .AddEasingKeyFrame(0.4, -30)
+                .AddEasingKeyFrame(0.5, 0)
+                .AddEasingKeyFrame(0.6, -15)
+                .AddEasingKeyFrame(0.8, 0)
+                .AddEasingKeyFrame(1.0, 0);
+        }
+
+        public IEnumerable<Timeline> CreateShakeAnimation(FrameworkElement element)
+        {
+            yield return element.AnimateProperty(AnimationProperty.TranslateX)
+                .AddEasingKeyFrame(0.0, 0)
+                .AddEasingKeyFrame(0.1, -10)
+                .AddEasingKeyFrame(0.2, 10)
+                .AddEasingKeyFrame(0.3, -10)
+                .AddEasingKeyFrame(0.4, 10)
+                .AddEasingKeyFrame(0.5, -10)
+                .AddEasingKeyFrame(0.6, 10)
+                .AddEasingKeyFrame(0.7, -10)
+                .AddEasingKeyFrame(0.8, 10)
+                .AddEasingKeyFrame(0.9, -10)
+                .AddEasingKeyFrame(1.0, 0);
+        }
+
+        public IEnumerable<Timeline> CreateTadaAnimation(FrameworkElement element)
+        {
+            yield return element.AnimateProperty(AnimationProperty.ScaleX)
+                .AddEasingKeyFrame(0.0, 1)
+                .AddEasingKeyFrame(0.1, 0.9)
+                .AddEasingKeyFrame(0.2, 0.9)
+                .AddEasingKeyFrame(0.3, 1.1)
+                .AddEasingKeyFrame(0.9, 1.1)
+                .AddEasingKeyFrame(1.0, 1);
+            yield return element.AnimateProperty(AnimationProperty.ScaleY)
+                .AddEasingKeyFrame(0.0, 1)
+                .AddEasingKeyFrame(0.1, 0.9)
+                .AddEasingKeyFrame(0.2, 0.9)
+                .AddEasingKeyFrame(0.3, 1.1)
+                .AddEasingKeyFrame(0.9, 1.1)
+                .AddEasingKeyFrame(1.0, 1);
+            yield return element.AnimateProperty(AnimationProperty.Rotation)
+                .AddEasingKeyFrame(0.1, -3)
+                .AddEasingKeyFrame(0.2, -3)
+                .AddEasingKeyFrame(0.3, 3)
+                .AddEasingKeyFrame(0.4, -3)
+                .AddEasingKeyFrame(0.5, 3)
+                .AddEasingKeyFrame(0.6, -3)
+                .AddEasingKeyFrame(0.7, 3)
+                .AddEasingKeyFrame(0.8, -3)
+                .AddEasingKeyFrame(0.9, 3)
+                .AddEasingKeyFrame(1.0, 0);
+        }
+
+        public IEnumerable<Timeline> CreateSwingAnimation(FrameworkElement element)
+        {
+            element.RenderTransformOrigin = new Point(0.5, 0);
+
+            yield return element.AnimateProperty(AnimationProperty.Rotation)
+                .AddEasingKeyFrame(0.2, 15)
+                .AddEasingKeyFrame(0.4, -10)
+                .AddEasingKeyFrame(0.6, 5)
+                .AddEasingKeyFrame(0.8, -5)
+                .AddEasingKeyFrame(1.0, 0);
+        }
+
+        public IEnumerable<Timeline> CreateWobbleAnimation(FrameworkElement element)
+        {
+            yield return element.AnimateProperty(AnimationProperty.Rotation)
+                .AddEasingKeyFrame(0.15, -5)
+                .AddEasingKeyFrame(0.3, 3)
+                .AddEasingKeyFrame(0.45, -3)
+                .AddEasingKeyFrame(0.6, 2)
+                .AddEasingKeyFrame(0.75, -1)
+                .AddEasingKeyFrame(1.0, 0);
+            yield return element.AnimateProperty(AnimationProperty.TranslateX)
+                .AddEasingKeyFrame(0.0, 0)
+                .AddEasingKeyFrame(0.15, -25)
+                .AddEasingKeyFrame(0.3, 20)
+                .AddEasingKeyFrame(0.45, -15)
+                .AddEasingKeyFrame(0.6, 10)
+                .AddEasingKeyFrame(0.75, -5)
+                .AddEasingKeyFrame(1.0, 0);
+        }
+
+        public IEnumerable<Timeline> CreatePulseAnimation(FrameworkElement element)
+        {
+            yield return element.AnimateProperty(AnimationProperty.ScaleX)
+                .AddEasingKeyFrame(0.0, 1, new QuadraticEase {EasingMode = EasingMode.EaseInOut})
+                .AddEasingKeyFrame(0.5, 1.1, new QuadraticEase { EasingMode = EasingMode.EaseInOut })
+                .AddEasingKeyFrame(1.0, 1, new QuadraticEase { EasingMode = EasingMode.EaseInOut });
+            yield return element.AnimateProperty(AnimationProperty.ScaleY)
+                .AddEasingKeyFrame(0.0, 1, new QuadraticEase { EasingMode = EasingMode.EaseInOut })
+                .AddEasingKeyFrame(0.5, 1.1, new QuadraticEase { EasingMode = EasingMode.EaseInOut })
+                .AddEasingKeyFrame(1.0, 1, new QuadraticEase { EasingMode = EasingMode.EaseInOut });
+        }
+
+        public IEnumerable<Timeline> CreateBreathingAnimation(FrameworkElement element)
+        {
+            yield return element.AnimateProperty(AnimationProperty.ScaleX)
+                .AddEasingKeyFrame(0.0, 1, new QuadraticEase())
+                .AddEasingKeyFrame(0.5, 1.1, new QuadraticEase())
+                .AddEasingKeyFrame(1.0, 1, new QuadraticEase());
+            yield return element.AnimateProperty(AnimationProperty.ScaleY)
+                .AddEasingKeyFrame(0.0, 1, new QuadraticEase())
+                .AddEasingKeyFrame(0.5, 1.1, new QuadraticEase())
+                .AddEasingKeyFrame(1.0, 1, new QuadraticEase());
+        }
+
+        public IEnumerable<Timeline> CreateJumpAnimation(FrameworkElement element)
+        {
+            yield return element.AnimatePointProperty("(UIElement.RenderTransformOrigin)")
+                    .AddEasingKeyFrame(0.0, new Point(0.5, 1));
+            yield return element.AnimateProperty(AnimationProperty.ScaleY)
+                .AddEasingKeyFrame(0.0, 1)
+                .AddEasingKeyFrame(0.2, 0.6)
+                .AddEasingKeyFrame(0.4, 1.2)
+                .AddEasingKeyFrame(0.8, 1)
+                .AddEasingKeyFrame(1.0, 0.6)
+                .AddEasingKeyFrame(1.2, 1);
+            yield return element.AnimateProperty(AnimationProperty.TranslateY)
+                .AddEasingKeyFrame(0.0, 0)
+                .AddEasingKeyFrame(0.2, 0)
+                .AddEasingKeyFrame(0.4, -20)
+                .AddEasingKeyFrame(0.6, -20)
+                .AddEasingKeyFrame(0.8, -10)
+                .AddEasingKeyFrame(1.0, 0)
+                .AddEasingKeyFrame(1.0, 0);
+        }
+
+        public IEnumerable<Timeline> CreateFlipAnimation(FrameworkElement element)
+        {
+            yield return element.AnimateProperty("(UIElement.Projection).(PlaneProjection.RotationY)")
+                .AddEasingKeyFrame(0.0, 0)
+                .AddEasingKeyFrame(0.4, 170)
+                .AddEasingKeyFrame(0.5, 190)
+                .AddEasingKeyFrame(0.8, 360)
+                .AddEasingKeyFrame(1.0, 360);
+            yield return element.AnimateProperty("(UIElement.Projection).(PlaneProjection.GlobalOffsetZ)")
+                .AddEasingKeyFrame(0.0, 0)
+                .AddEasingKeyFrame(0.4, 150)
+                .AddEasingKeyFrame(0.5, 150)
+                .AddEasingKeyFrame(0.8, 0)
+                .AddEasingKeyFrame(1.0, 0);
+            yield return element.AnimateProperty(AnimationProperty.ScaleX)
+                .AddEasingKeyFrame(0.0, 1)
+                .AddEasingKeyFrame(0.5, 1)
+                .AddEasingKeyFrame(0.8, 1.1)
+                .AddEasingKeyFrame(1.0, 1);
+            yield return element.AnimateProperty(AnimationProperty.ScaleY)
+                .AddEasingKeyFrame(0.0, 1)
+                .AddEasingKeyFrame(0.5, 1)
+                .AddEasingKeyFrame(0.8, 1.1)
+                .AddEasingKeyFrame(1.0, 1);
+        }
+
+        public IEnumerable<Timeline> CreateFlipInXAnimation(FrameworkElement element)
+        {
+            yield return element.AnimateProperty("(UIElement.Projection).(PlaneProjection.RotationX)")
+                .AddEasingKeyFrame(0.0, 90)
+                .AddEasingKeyFrame(0.4, -10)
+                .AddEasingKeyFrame(0.7, 10)
+                .AddEasingKeyFrame(1.0, 0);
+            yield return element.AnimateProperty(AnimationProperty.Opacity)
+                .AddEasingKeyFrame(0.0, 0)
+                .AddEasingKeyFrame(1.0, 1, new CubicEase());
+        }
+        public IEnumerable<Timeline> CreateFlipOutXAnimation(FrameworkElement element)
+        {
+            yield return element.AnimateProperty("(UIElement.Projection).(PlaneProjection.RotationX)")
+                .AddEasingKeyFrame(0.0, 0)
+                .AddEasingKeyFrame(0.4, -90, new QuarticEase { EasingMode = EasingMode.EaseOut });
+            yield return element.AnimateProperty(AnimationProperty.Opacity)
+                .AddEasingKeyFrame(0.0, 1)
+                .AddEasingKeyFrame(0.4, 0);
+        }
+
+        public IEnumerable<Timeline> CreateFlipInYAnimation(FrameworkElement element)
+        {
+            yield return element.AnimateProperty("(UIElement.Projection).(PlaneProjection.RotationY)")
+                .AddEasingKeyFrame(0.0, 90)
+                .AddEasingKeyFrame(0.4, -10)
+                .AddEasingKeyFrame(0.7, 10)
+                .AddEasingKeyFrame(1.0, 0);
+            yield return element.AnimateProperty(AnimationProperty.Opacity)
+                .AddEasingKeyFrame(0.0, 0)
+                .AddEasingKeyFrame(1.0, 1, new CubicEase());
+        }
+
+        public IEnumerable<Timeline> CreateFlipOutYAnimation(FrameworkElement element)
+        {
+            yield return element.AnimateProperty("(UIElement.Projection).(PlaneProjection.RotationY)")
+                .AddEasingKeyFrame(0.0, 0)
+                .AddEasingKeyFrame(0.4, -90, new QuarticEase { EasingMode = EasingMode.EaseOut });
+            yield return element.AnimateProperty(AnimationProperty.Opacity)
+                .AddEasingKeyFrame(0.0, 1)
+                .AddEasingKeyFrame(0.4, 0);
+        }
+
+
+        public IEnumerable<Timeline> CreateFadeInAnimation(FrameworkElement element)
+        {
+            yield return element.AnimateProperty(AnimationProperty.Opacity)
+                .AddEasingKeyFrame(0.0, 0)
+                .AddEasingKeyFrame(0.4, 1);
+        }
+
+        public IEnumerable<Timeline> CreateFadeInUpAnimation(FrameworkElement element)
+        {
+            yield return element.AnimateProperty(AnimationProperty.TranslateY)
+                .AddEasingKeyFrame(0.0, 20)
+                .AddEasingKeyFrame(0.4, 0);
+            yield return element.AnimateProperty(AnimationProperty.Opacity)
+                .AddEasingKeyFrame(0.0, 0)
+                .AddEasingKeyFrame(0.4, 1);
+        }
+
+        public IEnumerable<Timeline> CreateFadeInDownAnimation(FrameworkElement element)
+        {
+            yield return element.AnimateProperty(AnimationProperty.TranslateY)
+                .AddEasingKeyFrame(0.0, -20)
+                .AddEasingKeyFrame(0.4, 0);
+            yield return element.AnimateProperty(AnimationProperty.Opacity)
+                .AddEasingKeyFrame(0.0, 0)
+                .AddEasingKeyFrame(0.4, 1);
+        }
+
+        public IEnumerable<Timeline> CreateFadeInLeftAnimation(FrameworkElement element)
+        {
+            yield return element.AnimateProperty(AnimationProperty.TranslateX)
+                .AddEasingKeyFrame(0.0, 20)
+                .AddEasingKeyFrame(0.4, 0);
+            yield return element.AnimateProperty(AnimationProperty.Opacity)
+                .AddEasingKeyFrame(0.0, 0)
+                .AddEasingKeyFrame(0.4, 1);
+        }
+
+        public IEnumerable<Timeline> CreateFadeInRightAnimation(FrameworkElement element)
+        {
+            yield return element.AnimateProperty(AnimationProperty.TranslateX)
+                .AddEasingKeyFrame(0.0, -20)
+                .AddEasingKeyFrame(0.4, 0);
+            yield return element.AnimateProperty(AnimationProperty.Opacity)
+                .AddEasingKeyFrame(0.0, 0)
+                .AddEasingKeyFrame(0.4, 1);
+        }
+
+        public IEnumerable<Timeline> CreateFadeInUpBigAnimation(FrameworkElement element)
+        {
+            yield return element.AnimateProperty(AnimationProperty.TranslateY)
+                .AddEasingKeyFrame(0.0, 2000)
+                .AddEasingKeyFrame(0.4, 0);
+            yield return element.AnimateProperty(AnimationProperty.Opacity)
+                .AddEasingKeyFrame(0.0, 0)
+                .AddEasingKeyFrame(0.4, 1);
+        }
+
+        public IEnumerable<Timeline> CreateFadeInDownBigAnimation(FrameworkElement element)
+        {
+            yield return element.AnimateProperty(AnimationProperty.TranslateY)
+                .AddEasingKeyFrame(0.0, -2000)
+                .AddEasingKeyFrame(0.4, 0);
+            yield return element.AnimateProperty(AnimationProperty.Opacity)
+                .AddEasingKeyFrame(0.0, 0)
+                .AddEasingKeyFrame(0.4, 1);
+        }
+
+        public IEnumerable<Timeline> CreateFadeInLeftBigAnimation(FrameworkElement element)
+        {
+            yield return element.AnimateProperty(AnimationProperty.TranslateX)
+                .AddEasingKeyFrame(0.0, 2000)
+                .AddEasingKeyFrame(0.4, 0);
+            yield return element.AnimateProperty(AnimationProperty.Opacity)
+                .AddEasingKeyFrame(0.0, 0)
+                .AddEasingKeyFrame(0.4, 1);
+        }
+
+        public IEnumerable<Timeline> CreateFadeInRightBigAnimation(FrameworkElement element)
+        {
+            yield return element.AnimateProperty(AnimationProperty.TranslateX)
+                .AddEasingKeyFrame(0.0, -2000)
+                .AddEasingKeyFrame(0.4, 0);
+            yield return element.AnimateProperty(AnimationProperty.Opacity)
+                .AddEasingKeyFrame(0.0, 0)
+                .AddEasingKeyFrame(0.4, 1);
+        }
+
+
+
+        public IEnumerable<Timeline> CreateFadeOutAnimation(FrameworkElement element)
+        {
+            yield return element.AnimateProperty(AnimationProperty.Opacity)
+                .AddEasingKeyFrame(0.0, 1)
+                .AddEasingKeyFrame(0.4, 0);
+        }
+
+        public IEnumerable<Timeline> CreateFadeOutUpAnimation(FrameworkElement element)
+        {
+            yield return element.AnimateProperty(AnimationProperty.TranslateY)
+                .AddEasingKeyFrame(0.0, 0)
+                .AddEasingKeyFrame(0.4, -20);
+            yield return element.AnimateProperty(AnimationProperty.Opacity)
+                .AddEasingKeyFrame(0.0, 1)
+                .AddEasingKeyFrame(0.4, 0);
+        }
+
+        public IEnumerable<Timeline> CreateFadeOutDownAnimation(FrameworkElement element)
+        {
+            yield return element.AnimateProperty(AnimationProperty.TranslateY)
+                .AddEasingKeyFrame(0.0, 0)
+                .AddEasingKeyFrame(0.4, 20);
+            yield return element.AnimateProperty(AnimationProperty.Opacity)
+                .AddEasingKeyFrame(0.0, 1)
+                .AddEasingKeyFrame(0.4, 0);
+        }
+
+        public IEnumerable<Timeline> CreateFadeOutLeftAnimation(FrameworkElement element)
+        {
+            yield return element.AnimateProperty(AnimationProperty.TranslateX)
+                .AddEasingKeyFrame(0.0, 0)
+                .AddEasingKeyFrame(0.4, -20);
+            yield return element.AnimateProperty(AnimationProperty.Opacity)
+                .AddEasingKeyFrame(0.0, 1)
+                .AddEasingKeyFrame(0.4, 0);
+        }
+
+        public IEnumerable<Timeline> CreateFadeOutRightAnimation(FrameworkElement element)
+        {
+            yield return element.AnimateProperty(AnimationProperty.TranslateX)
+                .AddEasingKeyFrame(0.0, 0)
+                .AddEasingKeyFrame(0.4, 20);
+            yield return element.AnimateProperty(AnimationProperty.Opacity)
+                .AddEasingKeyFrame(0.0, 1)
+                .AddEasingKeyFrame(0.4, 0);
+        }
+
+        public IEnumerable<Timeline> CreateFadeOutUpBigAnimation(FrameworkElement element)
+        {
+            yield return element.AnimateProperty(AnimationProperty.TranslateY)
+                .AddEasingKeyFrame(0.0, 0)
+                .AddEasingKeyFrame(0.4, -2000);
+            yield return element.AnimateProperty(AnimationProperty.Opacity)
+                .AddEasingKeyFrame(0.0, 1)
+                .AddEasingKeyFrame(0.4, 0);
+        }
+
+        public IEnumerable<Timeline> CreateFadeOutDownBigAnimation(FrameworkElement element)
+        {
+            yield return element.AnimateProperty(AnimationProperty.TranslateY)
+                .AddEasingKeyFrame(0.0, 0)
+                .AddEasingKeyFrame(0.4, 2000);
+            yield return element.AnimateProperty(AnimationProperty.Opacity)
+                .AddEasingKeyFrame(0.0, 1)
+                .AddEasingKeyFrame(0.4, 0);
+        }
+
+        public IEnumerable<Timeline> CreateFadeOutLeftBigAnimation(FrameworkElement element)
+        {
+            yield return element.AnimateProperty(AnimationProperty.TranslateX)
+                .AddEasingKeyFrame(0.0, 0)
+                .AddEasingKeyFrame(0.4, -2000);
+            yield return element.AnimateProperty(AnimationProperty.Opacity)
+                .AddEasingKeyFrame(0.0, 1)
+                .AddEasingKeyFrame(0.4, 0);
+        }
+
+        public IEnumerable<Timeline> CreateFadeOutRightBigAnimation(FrameworkElement element)
+        {
+            yield return element.AnimateProperty(AnimationProperty.TranslateX)
+                .AddEasingKeyFrame(0.0, 0)
+                .AddEasingKeyFrame(0.4, 2000);
+            yield return element.AnimateProperty(AnimationProperty.Opacity)
+                .AddEasingKeyFrame(0.0, 1)
+                .AddEasingKeyFrame(0.4, 0);
+        }
+
+
+
+
+
+        public IEnumerable<Timeline> CreateBounceInAnimation(FrameworkElement element)
+        {
+            yield return element.AnimateProperty(AnimationProperty.ScaleX)
+                .AddEasingKeyFrame(0.0, 0.3)
+                .AddEasingKeyFrame(0.4, 1, new BackEase {Amplitude = 0.4});
+            yield return element.AnimateProperty(AnimationProperty.ScaleY)
+                .AddEasingKeyFrame(0.0, 0.3)
+                .AddEasingKeyFrame(0.4, 1, new BackEase { Amplitude = 0.4 });
+            yield return element.AnimateProperty(AnimationProperty.Opacity)
+                .AddEasingKeyFrame(0.0, 0)
+                .AddEasingKeyFrame(0.2, 1);
+        }
+
+        public IEnumerable<Timeline> CreateBounceInUpAnimation(FrameworkElement element)
+        {
+            yield return element.AnimateProperty(AnimationProperty.TranslateY)
+                .AddEasingKeyFrame(0.0, 500)
+                .AddEasingKeyFrame(0.4, 0, new BackEase { Amplitude = 0.4 });
+            yield return element.AnimateProperty(AnimationProperty.Opacity)
+                .AddEasingKeyFrame(0.0, 0)
+                .AddEasingKeyFrame(0.2, 1);
+        }
+
+        public IEnumerable<Timeline> CreateBounceInDownAnimation(FrameworkElement element)
+        {
+            yield return element.AnimateProperty(AnimationProperty.TranslateY)
+                .AddEasingKeyFrame(0.0, -500)
+                .AddEasingKeyFrame(0.4, 0, new BackEase { Amplitude = 0.4 });
+            yield return element.AnimateProperty(AnimationProperty.Opacity)
+                .AddEasingKeyFrame(0.0, 0)
+                .AddEasingKeyFrame(0.2, 1);
+        }
+
+        public IEnumerable<Timeline> CreateBounceInLeftAnimation(FrameworkElement element)
+        {
+            yield return element.AnimateProperty(AnimationProperty.TranslateX)
+                .AddEasingKeyFrame(0.0, 500)
+                .AddEasingKeyFrame(0.4, 0, new BackEase { Amplitude = 0.4 });
+            yield return element.AnimateProperty(AnimationProperty.Opacity)
+                .AddEasingKeyFrame(0.0, 0)
+                .AddEasingKeyFrame(0.2, 1);
+        }
+
+        public IEnumerable<Timeline> CreateBounceInRightAnimation(FrameworkElement element)
+        {
+            yield return element.AnimateProperty(AnimationProperty.TranslateX)
+                .AddEasingKeyFrame(0.0, -500)
+                .AddEasingKeyFrame(0.4, 0, new BackEase { Amplitude = 0.4 });
+            yield return element.AnimateProperty(AnimationProperty.Opacity)
+                .AddEasingKeyFrame(0.0, 0)
+                .AddEasingKeyFrame(0.2, 1);
+        }
+
+
+
+        public IEnumerable<Timeline> CreateBounceOutAnimation(FrameworkElement element)
+        {
+            yield return element.AnimateProperty(AnimationProperty.ScaleX)
+                .AddEasingKeyFrame(0.0, 1)
+                .AddEasingKeyFrame(0.4, 0.3, new BackEase { Amplitude = 0.4, EasingMode = EasingMode.EaseIn});
+            yield return element.AnimateProperty(AnimationProperty.ScaleY)
+                .AddEasingKeyFrame(0.0, 1)
+                .AddEasingKeyFrame(0.4, 0.3, new BackEase { Amplitude = 0.4, EasingMode = EasingMode.EaseIn });
+            yield return element.AnimateProperty(AnimationProperty.Opacity)
+                .AddEasingKeyFrame(0.0, 1)
+                .AddEasingKeyFrame(0.2, 1)
+                .AddEasingKeyFrame(0.4, 0);
+        }
+
+        public IEnumerable<Timeline> CreateBounceOutUpAnimation(FrameworkElement element)
+        {
+            yield return element.AnimateProperty(AnimationProperty.TranslateY)
+                .AddEasingKeyFrame(0.0, 0)
+                .AddEasingKeyFrame(0.4, -500, new BackEase { Amplitude = 0.4, EasingMode = EasingMode.EaseIn});
+            yield return element.AnimateProperty(AnimationProperty.Opacity)
+                .AddEasingKeyFrame(0.0, 1)
+                .AddEasingKeyFrame(0.2, 1)
+                .AddEasingKeyFrame(0.4, 0);
+        }
+
+        public IEnumerable<Timeline> CreateBounceOutDownAnimation(FrameworkElement element)
+        {
+            yield return element.AnimateProperty(AnimationProperty.TranslateY)
+                .AddEasingKeyFrame(0.0, 0)
+                .AddEasingKeyFrame(0.4, 500, new BackEase { Amplitude = 0.4, EasingMode = EasingMode.EaseIn});
+            yield return element.AnimateProperty(AnimationProperty.Opacity)
+                .AddEasingKeyFrame(0.0, 1)
+                .AddEasingKeyFrame(0.2, 1)
+                .AddEasingKeyFrame(0.4, 0);
+        }
+
+        public IEnumerable<Timeline> CreateBounceOutLeftAnimation(FrameworkElement element)
+        {
+            yield return element.AnimateProperty(AnimationProperty.TranslateX)
+                .AddEasingKeyFrame(0.0, 0)
+                .AddEasingKeyFrame(0.4, -500, new BackEase { Amplitude = 0.4, EasingMode = EasingMode.EaseIn});
+            yield return element.AnimateProperty(AnimationProperty.Opacity)
+                .AddEasingKeyFrame(0.0, 1)
+                .AddEasingKeyFrame(0.2, 1)
+                .AddEasingKeyFrame(0.4, 0);
+        }
+
+        public IEnumerable<Timeline> CreateBounceOutRightAnimation(FrameworkElement element)
+        {
+            yield return element.AnimateProperty(AnimationProperty.TranslateX)
+                .AddEasingKeyFrame(0.0, 0)
+                .AddEasingKeyFrame(0.4, 500, new BackEase { Amplitude = 0.4, EasingMode = EasingMode.EaseIn});
+            yield return element.AnimateProperty(AnimationProperty.Opacity)
+                .AddEasingKeyFrame(0.0, 1)
+                .AddEasingKeyFrame(0.2, 1)
+                .AddEasingKeyFrame(0.4, 0);
+        }
+
+
+
+        public IEnumerable<Timeline> CreateHingeAnimation(FrameworkElement element)
+        {
+            element.RenderTransformOrigin = new Point(0, 0);
+
+            yield return element.AnimateProperty(AnimationProperty.Rotation)
+                .AddEasingKeyFrame(0.0, 0, new CubicEase {EasingMode = EasingMode.EaseInOut})
+                .AddEasingKeyFrame(0.2, 80, new CubicEase { EasingMode = EasingMode.EaseInOut })
+                .AddEasingKeyFrame(0.4, 60, new CubicEase { EasingMode = EasingMode.EaseInOut })
+                .AddEasingKeyFrame(0.6, 80, new CubicEase { EasingMode = EasingMode.EaseInOut })
+                .AddEasingKeyFrame(0.8, 60, new CubicEase { EasingMode = EasingMode.EaseInOut })
+                .AddEasingKeyFrame(1.0, 0);
+
+            yield return element.AnimateProperty(AnimationProperty.TranslateY)
+                .AddEasingKeyFrame(0.8, 0)
+                .AddEasingKeyFrame(1.0, 700);
+
+            yield return element.AnimateProperty(AnimationProperty.Opacity)
+                .AddEasingKeyFrame(0.0, 1)
+                .AddEasingKeyFrame(0.8, 1)
+                .AddEasingKeyFrame(1.0, 0);
+        }
+
+        public IEnumerable<Timeline> CreateLightSpeedInRightAnimation(FrameworkElement element)
+        {
+            element.RenderTransformOrigin = new Point(0, 1);
+
+            yield return element.AnimateProperty(AnimationProperty.Opacity)
+                .AddEasingKeyFrame(0.0, 0)
+                .AddEasingKeyFrame(0.6, 1);
+
+            yield return element.AnimateProperty(AnimationProperty.TranslateX)
+                .AddEasingKeyFrame(0.0, 700)
+                .AddEasingKeyFrame(0.6, -30, new QuadraticEase())
+                .AddEasingKeyFrame(0.8, 0);
+
+            yield return element.AnimateProperty(AnimationProperty.SkewX)
+                .AddEasingKeyFrame(0.0, -30)
+                .AddEasingKeyFrame(0.6, 30)
+                .AddEasingKeyFrame(0.8, -15)
+                .AddEasingKeyFrame(1.0, 0);
+        }
+
+        public IEnumerable<Timeline> CreateLightSpeedOutRightAnimation(FrameworkElement element)
+        {
+            element.RenderTransformOrigin = new Point(0, 1);
+
+            yield return element.AnimateProperty(AnimationProperty.Opacity)
+                .AddEasingKeyFrame(0.0, 1)
+                .AddEasingKeyFrame(0.6, 0);
+
+            yield return element.AnimateProperty(AnimationProperty.TranslateX)
+                .AddEasingKeyFrame(0.0, 0)
+                .AddEasingKeyFrame(0.6, 700);
+
+            yield return element.AnimateProperty(AnimationProperty.SkewX)
+                .AddEasingKeyFrame(0.0, 0)
+                .AddEasingKeyFrame(0.6, -30)
+                .AddEasingKeyFrame(0.61, 0);
+        }
+
+        public IEnumerable<Timeline> CreateLightSpeedInLeftAnimation(FrameworkElement element)
+        {
+            element.RenderTransformOrigin = new Point(0, 1);
+
+            yield return element.AnimateProperty(AnimationProperty.Opacity)
+                .AddEasingKeyFrame(0.0, 0)
+                .AddEasingKeyFrame(0.6, 1);
+
+            yield return element.AnimateProperty(AnimationProperty.TranslateX)
+                .AddEasingKeyFrame(0.0, -700)
+                .AddEasingKeyFrame(0.6, 30, new QuadraticEase())
+                .AddEasingKeyFrame(0.8, 0);
+
+            yield return element.AnimateProperty(AnimationProperty.SkewX)
+                .AddEasingKeyFrame(0.0, 30)
+                .AddEasingKeyFrame(0.6, -30)
+                .AddEasingKeyFrame(0.8, 15)
+                .AddEasingKeyFrame(1.0, 0);
+        }
+
+        public IEnumerable<Timeline> CreateLightSpeedOutLeftAnimation(FrameworkElement element)
+        {
+            element.RenderTransformOrigin = new Point(0, 1);
+
+            yield return element.AnimateProperty(AnimationProperty.Opacity)
+                .AddEasingKeyFrame(0.0, 1)
+                .AddEasingKeyFrame(0.6, 0);
+
+            yield return element.AnimateProperty(AnimationProperty.TranslateX)
+                .AddEasingKeyFrame(0.0, 0)
+                .AddEasingKeyFrame(0.6, -700);
+
+            yield return element.AnimateProperty(AnimationProperty.SkewX)
+                .AddEasingKeyFrame(0.0, 0)
+                .AddEasingKeyFrame(0.6, 30)
+                .AddEasingKeyFrame(0.61, 0);
+        }
+
+        public IEnumerable<Timeline> CreateResetAnimation(FrameworkElement element)
+        {
+            element.RenderTransformOrigin = new Point(0, 0);
+
+            yield return element.AnimateProperty(AnimationProperty.Opacity)
+                .AddEasingKeyFrame(0.0, 1);
+            yield return element.AnimateProperty(AnimationProperty.Rotation)
+                .AddEasingKeyFrame(0.0, 0);
+            yield return element.AnimateProperty(AnimationProperty.TranslateX)
+                .AddEasingKeyFrame(0.0, 0);
+            yield return element.AnimateProperty(AnimationProperty.TranslateY)
+                .AddEasingKeyFrame(0.0, 0);
+            yield return element.AnimateProperty(AnimationProperty.ScaleX)
+                .AddEasingKeyFrame(0.0, 1);
+            yield return element.AnimateProperty(AnimationProperty.ScaleY)
+                .AddEasingKeyFrame(0.0, 1);
+            yield return element.AnimateProperty("(UIElement.Projection).(PlaneProjection.RotationX)")
+                .AddEasingKeyFrame(0.0, 0);
+            yield return element.AnimateProperty("(UIElement.Projection).(PlaneProjection.RotationY)")
+                .AddEasingKeyFrame(0.0, 0);
+            yield return element.AnimateProperty("(UIElement.Projection).(PlaneProjection.GlobalOffsetZ)")
+                .AddEasingKeyFrame(0.0, 0);
+        }
+
+
+        public static Storyboard AnimationStoryboard(
+            FrameworkElement element,
+            AnimationDefinition animationDefinition,
+            Action completedAction = null)
+        {
+            var animations = animationDefinition.CreateAnimation(element);
+
+            PrepareElement(element);
+
+            var sb = new Storyboard();
+            foreach (var animation in animations)
+            {
+                Storyboard.SetTarget(animation, element);
+                sb.Children.Add(animation);
+            }
+
+            sb.Completed += (sender, o) =>
+            {
+                Manager.RemoveStoryboard(element, sb);
+                if (completedAction != null)
+                    completedAction();
+            };
+
+            Manager.AddStoryboard(element, sb);
+
+            if (animationDefinition.SpeedRatio > 0.0)
+                sb.SpeedRatio = animationDefinition.SpeedRatio;
+            if (animationDefinition.RepeatCount > 0)
+                sb.RepeatBehavior = new RepeatBehavior(animationDefinition.RepeatCount);
+            if (animationDefinition.RepeatDuration > 0)
+                sb.RepeatBehavior = new RepeatBehavior(TimeSpan.FromSeconds(animationDefinition.RepeatDuration));
+            if (animationDefinition.Forever)
+                sb.RepeatBehavior = RepeatBehavior.Forever;
+            sb.AutoReverse = animationDefinition.AutoReverse;
+
+            if (animationDefinition.OpacityFromZero)
+                element.Opacity = 0;
+
+            if (animationDefinition.Delay > 0)
+                sb.BeginTime = TimeSpan.FromSeconds(animationDefinition.Delay);
+
+            return sb;
+        }
+
+
+        public static Storyboard AnimationStoryboard(
+            FrameworkElement element, 
+            string animationName, 
+            AnimationParameters animationParameters = null, 
+            Action completedAction = null)
+        {
+            var parameters = new AnimationParameters(animationName);
+            if (animationParameters == null)
+                animationParameters = parameters;
+            else
+                animationParameters.AnimationName = parameters.AnimationName;
+
+            if (!AnimationFactory.ContainsKey(animationParameters.AnimationName))
+            {
+                Debug.WriteLine("Animation Not Found: " + animationName);
+                return null;
+            }
+
+            var animations = AnimationFactory[animationParameters.AnimationName](element);
+
+            var sb = AnimationStoryboard(element, animations, animationParameters, completedAction);
+
+            return sb;
+        }
+
+        public static Storyboard AnimationStoryboard(
+            FrameworkElement element, 
+            IEnumerable<Timeline> animations, 
+            AnimationParameters animationParameters = null, 
+            Action completedAction = null)
+        {
+            PrepareElement(element);
+
+            var sb = new Storyboard();
+            foreach (var animation in animations)
+            {
+                Storyboard.SetTarget(animation, element);
+                sb.Children.Add(animation);
+            }
+
+            sb.Completed += (sender, o) =>
+            {
+                Manager.RemoveStoryboard(element, sb);
+                if (completedAction != null)
+                    completedAction();
+            };
+
+            Manager.AddStoryboard(element, sb);
+
+            if (animationParameters != null)
+            {
+                if (animationParameters.SpeedRatio > 0.0)
+                    sb.SpeedRatio = animationParameters.SpeedRatio;
+                if (animationParameters.RepeatCount > 0)
+                    sb.RepeatBehavior = new RepeatBehavior(animationParameters.RepeatCount);
+                if (animationParameters.RepeatDuration > 0)
+                    sb.RepeatBehavior = new RepeatBehavior(TimeSpan.FromSeconds(animationParameters.RepeatDuration));
+                if (animationParameters.Forever)
+                    sb.RepeatBehavior = RepeatBehavior.Forever;
+                sb.AutoReverse = animationParameters.AutoReverse;
+
+                if (AnimationOpacityFromZero.Contains(animationParameters.AnimationName))
+                    element.Opacity = 0;
+
+                if (animationParameters.Delay > 0)
+                    sb.BeginTime = TimeSpan.FromSeconds(animationParameters.Delay);
+            }
+
+            return sb;
+        }
+
+        public static void StopAnimations(FrameworkElement element)
+        {
+            Manager.StopStoryboards(element);
+        }
+
+
+        /// <summary>
+        /// This ensures the element has the appropriate projection and render transformation controls that are used in the pre-defined animations
+        /// </summary>
+        public static void PrepareElement(FrameworkElement element)
+        {
+            if (!(element.Projection is PlaneProjection))
+                element.Projection = new PlaneProjection();
+            if (!(element.RenderTransform is CompositeTransform))
+                element.RenderTransform = new CompositeTransform {CenterX = 0.5, CenterY = 0.5};
+
+            element.RenderTransformOrigin = new Point(0.5, 0.5);
+        }
+
+    }
+}

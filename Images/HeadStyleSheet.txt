@@ -1,0 +1,53 @@
+.sprite {
+    background-image: url(HeadSpriteSheet.png);
+    background-repeat: no-repeat;
+    display: block;
+}
+
+.sprite-Head1 {
+    width: 100px;
+    height: 150px;
+    background-position: 0 0;
+}
+
+.sprite-Head2 {
+    width: 100px;
+    height: 150px;
+    background-position: -100px 0;
+}
+
+.sprite-Head3 {
+    width: 100px;
+    height: 150px;
+    background-position: -200px 0;
+}
+
+.sprite-Head4 {
+    width: 100px;
+    height: 150px;
+    background-position: 0 -150px;
+}
+
+.sprite-Head5 {
+    width: 100px;
+    height: 150px;
+    background-position: -100px -150px;
+}
+
+.sprite-Head6 {
+    width: 100px;
+    height: 150px;
+    background-position: -200px -150px;
+}
+
+.sprite-Head7 {
+    width: 100px;
+    height: 150px;
+    background-position: -300px 0;
+}
+
+.sprite-Head8 {
+    width: 100px;
+    height: 150px;
+    background-position: -300px -150px;
+}

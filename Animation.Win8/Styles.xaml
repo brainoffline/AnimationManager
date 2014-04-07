@@ -1,0 +1,26 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Animation">
+
+    <Color x:Key="YellowColor">#FFECE8AB</Color>
+    <Color x:Key="LightGreyColor">#FFc1bf86</Color>
+    <Color x:Key="DarkGreyColor">#FF302f2d</Color>
+    <Color x:Key="BlueColor">#FF208bc3</Color>
+    <Color x:Key="RedColor">#FFe93c40</Color>
+    <Color x:Key="OrangeColor">#FFeb9710</Color>
+
+    <SolidColorBrush x:Key="YellowBrush" Color="{StaticResource YellowColor}"/>
+    <SolidColorBrush x:Key="LightGreyBrush" Color="{StaticResource LightGreyColor}"/>
+    <SolidColorBrush x:Key="DarkGreyBrush" Color="{StaticResource DarkGreyColor}"/>
+    <SolidColorBrush x:Key="BlueBrush" Color="{StaticResource BlueColor}"/>
+    <SolidColorBrush x:Key="RedBrush" Color="{StaticResource RedColor}"/>
+    <SolidColorBrush x:Key="OrangeBrush" Color="{StaticResource OrangeColor}"/>
+
+    <SolidColorBrush x:Key="BackgroundBrush" Color="{StaticResource YellowColor}"/>
+
+    <ItemsPanelTemplate x:Key="WrapGridPanelTemplate">
+    	<VirtualizingStackPanel />
+    </ItemsPanelTemplate>
+
+</ResourceDictionary>

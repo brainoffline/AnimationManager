@@ -1,0 +1,205 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>10.0.20506</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{1DD045B7-8A34-45E6-BCC3-16170F6464FC}</ProjectGuid>
+    <ProjectTypeGuids>{C089C8C0-30E0-4E22-80C0-CE093F111A43};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Brain.Animate</RootNamespace>
+    <AssemblyName>AnimationManager.WP8</AssemblyName>
+    <TargetFrameworkIdentifier>WindowsPhone</TargetFrameworkIdentifier>
+    <TargetFrameworkVersion>v8.0</TargetFrameworkVersion>
+    <SilverlightVersion>$(TargetFrameworkVersion)</SilverlightVersion>
+    <SilverlightApplication>false</SilverlightApplication>
+    <ValidateXaml>true</ValidateXaml>
+    <MinimumVisualStudioVersion>11.0</MinimumVisualStudioVersion>
+    <ThrowErrorsInValidation>true</ThrowErrorsInValidation>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>Bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;TRACE;SILVERLIGHT;WINDOWS_PHONE</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>Bin\Release</OutputPath>
+    <DefineConstants>TRACE;SILVERLIGHT;WINDOWS_PHONE</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>Bin\x86\Debug</OutputPath>
+    <DefineConstants>DEBUG;TRACE;SILVERLIGHT;WINDOWS_PHONE</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>Bin\x86\Release</OutputPath>
+    <DefineConstants>TRACE;SILVERLIGHT;WINDOWS_PHONE</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|ARM' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>Bin\ARM\Debug</OutputPath>
+    <DefineConstants>DEBUG;TRACE;SILVERLIGHT;WINDOWS_PHONE</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|ARM' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>Bin\ARM\Release</OutputPath>
+    <DefineConstants>TRACE;SILVERLIGHT;WINDOWS_PHONE</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="..\AnimationManager.Win8\AnimatedImage.xaml.cs">
+      <Link>AnimatedImage.xaml.cs</Link>
+      <DependentUpon>AnimatedImage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="..\AnimationManager.Win8\AnimatingTextBlock.xaml.cs">
+      <Link>AnimatingTextBlock.xaml.cs</Link>
+      <DependentUpon>AnimatingTextBlock.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="..\AnimationManager.Win8\AnimationDefinitions\AnimationDefinition.cs">
+      <Link>AnimationDefinitions\AnimationDefinition.cs</Link>
+    </Compile>
+    <Compile Include="..\AnimationManager.Win8\AnimationDefinitions\AttentionAnimations.cs">
+      <Link>AnimationDefinitions\AttentionAnimations.cs</Link>
+    </Compile>
+    <Compile Include="..\AnimationManager.Win8\AnimationDefinitions\BounceAnimations.cs">
+      <Link>AnimationDefinitions\BounceAnimations.cs</Link>
+    </Compile>
+    <Compile Include="..\AnimationManager.Win8\AnimationDefinitions\FadeAnimations.cs">
+      <Link>AnimationDefinitions\FadeAnimations.cs</Link>
+    </Compile>
+    <Compile Include="..\AnimationManager.Win8\AnimationDefinitions\FlipAnimations.cs">
+      <Link>AnimationDefinitions\FlipAnimations.cs</Link>
+    </Compile>
+    <Compile Include="..\AnimationManager.Win8\AnimationDefinitions\FrameAnimations.cs">
+      <Link>AnimationDefinitions\FrameAnimations.cs</Link>
+    </Compile>
+    <Compile Include="..\AnimationManager.Win8\AnimationDefinitions\HingeAnimation.cs">
+      <Link>AnimationDefinitions\HingeAnimation.cs</Link>
+    </Compile>
+    <Compile Include="..\AnimationManager.Win8\AnimationDefinitions\LightSpeedAnimations.cs">
+      <Link>AnimationDefinitions\LightSpeedAnimations.cs</Link>
+    </Compile>
+    <Compile Include="..\AnimationManager.Win8\AnimationDefinitions\ResetAnimation.cs">
+      <Link>AnimationDefinitions\ResetAnimation.cs</Link>
+    </Compile>
+    <Compile Include="..\AnimationManager.Win8\AnimationDefinitions\RotateAnimations.cs">
+      <Link>AnimationDefinitions\RotateAnimations.cs</Link>
+    </Compile>
+    <Compile Include="..\AnimationManager.Win8\AnimationDefinitions\ScaleAnimations.cs">
+      <Link>AnimationDefinitions\ScaleAnimations.cs</Link>
+    </Compile>
+    <Compile Include="..\AnimationManager.Win8\AnimationDefinitions\TurnstileAnimations.cs">
+      <Link>AnimationDefinitions\TurnstileAnimations.cs</Link>
+    </Compile>
+    <Compile Include="..\AnimationManager.Win8\AnimationEntensions.cs">
+      <Link>AnimationEntensions.cs</Link>
+    </Compile>
+    <Compile Include="..\AnimationManager.Win8\AnimationManager.cs">
+      <Link>AnimationManager.cs</Link>
+    </Compile>
+    <Compile Include="..\AnimationManager.Win8\AnimationProperty.cs">
+      <Link>AnimationProperty.cs</Link>
+    </Compile>
+    <Compile Include="..\AnimationManager.Win8\AnimationTrigger.cs">
+      <Link>AnimationTrigger.cs</Link>
+    </Compile>
+    <Compile Include="..\AnimationManager.Win8\Converters.cs">
+      <Link>Converters.cs</Link>
+    </Compile>
+    <Compile Include="..\AnimationManager.Win8\DropShaddow.cs">
+      <Link>DropShaddow.cs</Link>
+    </Compile>
+    <Compile Include="..\AnimationManager.Win8\Extensions\DependencyObjectExtensions.cs">
+      <Link>Extensions\DependencyObjectExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\AnimationManager.Win8\Extensions\ItemsControlExtensions.cs">
+      <Link>Extensions\ItemsControlExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\AnimationManager.Win8\Extensions\StoryboardExtensions.cs">
+      <Link>Extensions\StoryboardExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\AnimationManager.Win8\ListAnimation.cs">
+      <Link>ListAnimation.cs</Link>
+    </Compile>
+    <Compile Include="..\AnimationManager.Win8\NavigationAnimations\NavigationAnimationDefinition.cs">
+      <Link>NavigationAnimations\NavigationAnimationDefinition.cs</Link>
+    </Compile>
+    <Compile Include="..\AnimationManager.Win8\PanControl.cs">
+      <Link>PanControl.cs</Link>
+    </Compile>
+    <Compile Include="AnimationFrame.cs" />
+    <Compile Include="Extensions\NavigationExtensions.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="..\AnimationManager.Win8\AnimatedImage.xaml">
+      <Link>AnimatedImage.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\AnimationManager.Win8\AnimatingTextBlock.xaml">
+      <Link>AnimatingTextBlock.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\Generic.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\AnimationManager.Win8\Images\OvalShaddow.png">
+      <Link>Images\OvalShaddow.png</Link>
+    </Content>
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).$(TargetFrameworkVersion).Overrides.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).CSharp.targets" />
+  <ProjectExtensions />
+  <PropertyGroup>
+    <PostBuildEvent>copy "$(TargetPath)" "$(SolutionDir)\NugetPackage"
+</PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

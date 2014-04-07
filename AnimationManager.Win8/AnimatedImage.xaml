@@ -1,0 +1,41 @@
+﻿<UserControl 
+    x:Class="Brain.Animate.AnimatedImage"
+    x:Name="UserControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DesignHeight="150" d:DesignWidth="100">
+    
+    <Viewbox>
+        <Rectangle 
+            Width="{Binding ElementName=UserControl, Path=SpriteWidth}"
+            Height="{Binding ElementName=UserControl, Path=SpriteHeight}"
+            >
+            <Rectangle.Fill>
+                <ImageBrush 
+                    ImageSource="{Binding ElementName=UserControl, Path=SpriteSheetSource}"
+                    Stretch="None"
+                    AlignmentX="Left"
+                    AlignmentY="Top"
+                    >
+                    <ImageBrush.Transform>
+                        <CompositeTransform x:Name="SpriteTransform" />
+                    </ImageBrush.Transform>
+                </ImageBrush>
+            </Rectangle.Fill>
+        </Rectangle>
+    </Viewbox>
+
+    <!--
+    <Image x:Name="Image" 
+           Source="{Binding ElementName=UserControl, Path=SpriteSheetSource}" 
+           Stretch="UniformToFill" >
+        <Image.Clip>
+            <RectangleGeometry Rect="{Binding ElementName=UserControl, Path=SpriteRect}" />
+        </Image.Clip>
+    </Image>
+    -->
+    
+</UserControl>

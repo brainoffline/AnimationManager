@@ -1,0 +1,19 @@
+﻿<Application
+    x:Class="Animation.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Animation"
+    xmlns:bam="using:Brain.Animate"
+    >
+    
+    <Application.Resources>
+    	<ResourceDictionary>
+    		<ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="ms-appx:///AnimationManager.Win8/Themes/Generic.xaml"/>
+                <ResourceDictionary Source="Styles.xaml"/>
+    		</ResourceDictionary.MergedDictionaries>
+    		<bam:ValueToVisibility x:Key="ValueToVisibility" />
+    	</ResourceDictionary>
+    </Application.Resources>
+
+</Application>

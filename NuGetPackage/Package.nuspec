@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+    <metadata>
+        <id>AnimationManager</id>
+        <version>0.4.0.72</version>
+        <authors>Brian Donovan-Smith</authors>
+        <owners>Brian Donovan-Smith</owners>
+        <iconUrl>http://download-codeplex.sec.s-msft.com/Download?ProjectName=AnimationManager%26DownloadId=776458</iconUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>Animation Manager is designed to animate xaml controls in a very very easy way. These animations work the same way on both Windows 8 as well as Windows Phone 8.</description>
+        <releaseNotes>Release Candidate</releaseNotes>
+        <copyright>Copyright 2014</copyright>
+        <tags>XAML Animation</tags>
+    </metadata>
+    <files>
+        <file src="AnimationManager.Win8.dll" target="lib\netcore451\AnimationManager.Win8.dll" />
+        <file src="AnimationManager.WP8.dll" target="lib\wp8\AnimationManager.WP8.dll" />
+    </files>
+</package>
