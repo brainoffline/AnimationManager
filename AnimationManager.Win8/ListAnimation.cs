@@ -5,7 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using Brain.Animate.Extensions;
-#if NETFX_CORE
+
+#if NETFX_CORE || WINDOWS_81_PORTABLE
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 #endif

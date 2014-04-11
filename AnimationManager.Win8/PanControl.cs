@@ -5,7 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using Windows.ApplicationModel;
-#if NETFX_CORE
+
+#if NETFX_CORE || WINDOWS_81_PORTABLE
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
@@ -138,7 +139,7 @@ namespace Brain.Animate
         private void OnAutoPanRateChanged(double oldValue, double newValue)
         {
             AnimationManager.StopAnimations(this);
-#if NETFX_CORE
+#if NETFX_CORE || WINDOWS_81_PORTABLE
             if (!DesignMode.DesignModeEnabled)
 #endif
                 _startAutoPan = true;
@@ -154,7 +155,7 @@ namespace Brain.Animate
             DefaultStyleKey = typeof (PanControl);
         }
 
-#if NETFX_CORE
+#if NETFX_CORE || WINDOWS_81_PORTABLE
         protected override void OnApplyTemplate()
 #elif WINDOWS_PHONE
         public override void OnApplyTemplate()

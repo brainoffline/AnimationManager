@@ -4,7 +4,8 @@ using System.Linq;
 using System.Threading;
 using System.Windows;
 using Windows.UI.Core;
-#if NETFX_CORE
+
+#if NETFX_CORE || WINDOWS_81_PORTABLE
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
@@ -29,7 +30,7 @@ namespace Brain.Animate
 
     public partial class AnimatedImage : IDisposable
     {
-#if NETFX_CORE
+#if NETFX_CORE || WINDOWS_81_PORTABLE
         private Timer _animationTimer;
 #endif
 #if WINDOWS_PHONE
@@ -236,7 +237,7 @@ namespace Brain.Animate
             if (_animationSpriteList != null)
                 SpriteIndex = _animationSpriteList[0];
 
-#if NETFX_CORE
+#if NETFX_CORE || WINDOWS_81_PORTABLE
             _animationTimer = new Timer(async (state) => await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
 #endif
 #if WINDOWS_PHONE
@@ -262,7 +263,7 @@ namespace Brain.Animate
                         SpriteIndex = (SpriteIndex + 1)%SpriteCoordinates.Count;
                     }
                 }
-#if NETFX_CORE
+#if NETFX_CORE || WINDOWS_81_PORTABLE
             }), null, FrameTimeSpan, FrameTimeSpan);
 #endif
 #if WINDOWS_PHONE
@@ -278,7 +279,7 @@ namespace Brain.Animate
 
             if (_animationTimer != null)
             {
-#if NETFX_CORE
+#if NETFX_CORE || WINDOWS_81_PORTABLE
                 _animationTimer.Dispose();
 #endif
 #if WINDOWS_PHONE

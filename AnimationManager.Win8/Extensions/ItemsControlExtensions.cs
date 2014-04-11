@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
-#if NETFX_CORE
+#if NETFX_CORE || WINDOWS_81_PORTABLE
 using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -83,7 +83,7 @@ namespace Brain.Animate.Extensions
 
             for (int index = 0; index < itemsControl.Items.Count; index++)
             {
-#if NETFX_CORE
+#if NETFX_CORE || WINDOWS_81_PORTABLE
                 var container = (FrameworkElement)itemsControl.ContainerFromIndex(index);
 #endif
 #if WINDOWS_PHONE
@@ -118,7 +118,7 @@ namespace Brain.Animate.Extensions
             int index;
             for (index = 0; index < itemsControl.Items.Count; index++)
             {
-#if NETFX_CORE
+#if NETFX_CORE || WINDOWS_81_PORTABLE
                 var container = (FrameworkElement)itemsControl.ContainerFromIndex(index);
 #endif
 #if WINDOWS_PHONE
@@ -136,11 +136,11 @@ namespace Brain.Animate.Extensions
                         return result;
                     }
 
-#if NETFX_CORE
+#if NETFX_CORE || WINDOWS_81_PORTABLE
                     var boundingBox = new Rect(
                         itemTransform.TransformPoint(new Point()),
                         itemTransform.TransformPoint(new Point(container.ActualWidth, container.ActualHeight)));
-#else
+#elif WINDOWS_PHONE
                     var boundingBox = new Rect(
                         itemTransform.Transform(new Point()), 
                         itemTransform.Transform(new Point(container.ActualWidth, container.ActualHeight)));
@@ -157,7 +157,7 @@ namespace Brain.Animate.Extensions
 
             for (; index < itemsControl.Items.Count; index++)
             {
-#if NETFX_CORE
+#if NETFX_CORE || WINDOWS_81_PORTABLE
                 var container = (FrameworkElement)itemsControl.ContainerFromIndex(index);
 #endif
 #if WINDOWS_PHONE
@@ -173,11 +173,11 @@ namespace Brain.Animate.Extensions
                     return result;
                 }
 
-#if NETFX_CORE
+#if NETFX_CORE || WINDOWS_81_PORTABLE
                 var boundingBox = new Rect(
                     itemTransform.TransformPoint(new Point()),
                     itemTransform.TransformPoint(new Point(container.ActualWidth, container.ActualHeight)));
-#else
+#elif WINDOWS_PHONE
                 var boundingBox = new Rect(
                     itemTransform.Transform(new Point()), 
                     itemTransform.Transform(new Point(container.ActualWidth, container.ActualHeight)));

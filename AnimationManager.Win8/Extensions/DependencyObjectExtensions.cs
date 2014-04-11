@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
-#if NETFX_CORE
+#if NETFX_CORE || WINDOWS_81_PORTABLE
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media;
 #endif

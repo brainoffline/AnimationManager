@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
         <id>AnimationManager</id>
-        <version>0.4.0.72</version>
+        <version>0.5.0.76</version>
         <authors>Brian Donovan-Smith</authors>
         <owners>Brian Donovan-Smith</owners>
         <iconUrl>http://download-codeplex.sec.s-msft.com/Download?ProjectName=AnimationManager%26DownloadId=776458</iconUrl>
@@ -13,7 +13,8 @@
         <tags>XAML Animation</tags>
     </metadata>
     <files>
-        <file src="AnimationManager.Win8.dll" target="lib\netcore451\AnimationManager.Win8.dll" />
-        <file src="AnimationManager.WP8.dll" target="lib\wp8\AnimationManager.WP8.dll" />
+      <!-- file src="AnimationManager.Win8.dll" target="lib\netcore451\AnimationManager.Win8.dll" / -->
+      <file src="AnimationManager.WP8.dll" target="lib\wp8\AnimationManager.WP8.dll" />
+      <file src="AnimationManager.portable.dll" target="lib\portable-win8+wpa81\AnimationManager.portable.dll" />
     </files>
 </package>

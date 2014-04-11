@@ -49,9 +49,9 @@ namespace AnimationExperiments.WP8
 
         private void SetFrameNavigationAnimation(NavigationAnimationDefinition navigationAnimation)
         {
-#if NETFX_CORE
+#if NETFX_CORE || WINDOWS_81_PORTABLE
             var frame = Window.Current.Content as AnimationFrame;
-#else
+#elif WINDOWS_PHONE
             var frame = Application.Current.RootVisual as AnimationFrame;
 #endif
             if (frame == null) return;

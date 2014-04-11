@@ -8,7 +8,7 @@ using Windows.ApplicationModel;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 
-#if NETFX_CORE
+#if NETFX_CORE || WINDOWS_81_PORTABLE
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -67,7 +67,7 @@ namespace Brain.Animate
                 }
                 LayoutRoot.Children.Add(tb);
 
-#if NETFX_CORE
+#if NETFX_CORE || WINDOWS_81_PORTABLE
                 if (DesignMode.DesignModeEnabled)
                     return;
 #endif
@@ -115,8 +115,8 @@ namespace Brain.Animate
                     }
                     LayoutRoot.Children.Add(tb);
 
-#if NETFX_CORE
-                if (DesignMode.DesignModeEnabled)
+#if NETFX_CORE || WINDOWS_81_PORTABLE
+                    if (DesignMode.DesignModeEnabled)
                     return null;
 #endif
 

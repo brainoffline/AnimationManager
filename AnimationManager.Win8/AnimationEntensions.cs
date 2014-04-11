@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.UI.Core;
 
-#if NETFX_CORE
+#if NETFX_CORE || WINDOWS_81_PORTABLE
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -49,7 +49,7 @@ namespace Brain.Animate
             if (sb == null)
                 return null;
             Task t = AnimationManager.SplashScreenGone();
-#if NETFX_CORE
+#if NETFX_CORE || WINDOWS_81_PORTABLE
             t.ContinueWith(x => element.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, sb.Begin));
 #endif
 #if WINDOWS_PHONE
@@ -65,7 +65,7 @@ namespace Brain.Animate
             var tcs = new TaskCompletionSource<FrameworkElement>();
             var sb = AnimationManager.AnimationStoryboard(element, animations, animationParameters, () => tcs.SetResult(element));
             Task t = AnimationManager.SplashScreenGone();
-#if NETFX_CORE
+#if NETFX_CORE || WINDOWS_81_PORTABLE
             t.ContinueWith(x => element.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, sb.Begin));
 #endif
 #if WINDOWS_PHONE
@@ -278,7 +278,7 @@ namespace Brain.Animate
             Storyboard.SetTarget(animation, element);
 #if WINDOWS_PHONE
             Storyboard.SetTargetProperty(animation, new PropertyPath(path));
-#else
+#elif NETFX_CORE || WINDOWS_81_PORTABLE
             Storyboard.SetTargetProperty(animation, path);
 #endif
             return animation;
@@ -297,7 +297,7 @@ namespace Brain.Animate
                 EasingFunction = easingFunction
             };
             animation.KeyFrames.Add(keyFrame);
-#if NETFX_CORE
+#if NETFX_CORE || WINDOWS_81_PORTABLE
             animation.EnableDependentAnimation = true;
 #endif
             return animation;
@@ -316,7 +316,7 @@ namespace Brain.Animate
                 EasingFunction = easingFunction
             };
             animation.KeyFrames.Add(keyFrame);
-#if NETFX_CORE
+#if NETFX_CORE || WINDOWS_81_PORTABLE
             animation.EnableDependentAnimation = true;
 #endif
             return animation;
@@ -335,7 +335,7 @@ namespace Brain.Animate
                 EasingFunction = easingFunction
             };
             animation.KeyFrames.Add(keyFrame);
-#if NETFX_CORE
+#if NETFX_CORE || WINDOWS_81_PORTABLE
             animation.EnableDependentAnimation = true;
 #endif
             return animation;
@@ -352,7 +352,7 @@ namespace Brain.Animate
                 Value = value
             };
             animation.KeyFrames.Add(keyFrame);
-#if NETFX_CORE
+#if NETFX_CORE || WINDOWS_81_PORTABLE
             animation.EnableDependentAnimation = true;
 #endif
             return animation;
@@ -369,7 +369,7 @@ namespace Brain.Animate
                 Value = value,
             };
             animation.KeyFrames.Add(keyFrame);
-#if NETFX_CORE
+#if NETFX_CORE || WINDOWS_81_PORTABLE
             animation.EnableDependentAnimation = true;
 #endif
             return animation;
@@ -386,7 +386,7 @@ namespace Brain.Animate
                 Value = value,
             };
             animation.KeyFrames.Add(keyFrame);
-#if NETFX_CORE
+#if NETFX_CORE || WINDOWS_81_PORTABLE
             animation.EnableDependentAnimation = true;
 #endif
             return animation;
@@ -403,7 +403,7 @@ namespace Brain.Animate
                 Value = value
             };
             animation.KeyFrames.Add(keyframe);
-#if NETFX_CORE
+#if NETFX_CORE || WINDOWS_81_PORTABLE
             animation.EnableDependentAnimation = true;
 #endif
             return animation;

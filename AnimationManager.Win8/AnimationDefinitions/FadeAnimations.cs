@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-#if NETFX_CORE
+
+#if NETFX_CORE || WINDOWS_81_PORTABLE
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media.Animation;
 #endif

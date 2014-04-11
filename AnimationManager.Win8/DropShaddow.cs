@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-#if NETFX_CORE
+#if NETFX_CORE || WINDOWS_81_PORTABLE
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 #endif
@@ -44,7 +44,7 @@ namespace Brain.Animate
             DefaultStyleKey = typeof (DropShaddow);
         }
 
-#if NETFX_CORE
+#if NETFX_CORE || WINDOWS_81_PORTABLE
         protected override void OnApplyTemplate()
         {
             base.OnApplyTemplate();

@@ -6,7 +6,8 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Activation;
-#if NETFX_CORE
+
+#if NETFX_CORE || WINDOWS_81_PORTABLE
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
@@ -108,7 +109,7 @@ namespace Brain.Animate
 
         public static void RegisterSplashScreen(SplashScreen splashScreen)
         {
-#if NETFX_CORE
+#if NETFX_CORE || WINDOWS_81_PORTABLE
             lock (Manager)
             {
                 _splashScreenFinished = new ManualResetEvent(false);

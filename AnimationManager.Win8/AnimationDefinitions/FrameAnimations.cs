@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-#if NETFX_CORE
+#if NETFX_CORE || WINDOWS_81_PORTABLE
 using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -94,10 +94,10 @@ namespace Brain.Animate
 
         public override IEnumerable<Timeline> CreateAnimation(FrameworkElement element)
         {
-#if NETFX_CORE
+#if NETFX_CORE || WINDOWS_81_PORTABLE
             var frame = Window.Current.Content as Frame;
             var width = (frame != null) ? frame.ActualWidth : 1024;
-#else
+#elif WINDOWS_PHONE
             var frame = Application.Current.RootVisual as PhoneApplicationFrame;
             var width = (frame != null) ? frame.ActualWidth : 250;
 #endif
@@ -133,10 +133,10 @@ namespace Brain.Animate
         }
         public override IEnumerable<Timeline> CreateAnimation(FrameworkElement element)
         {
-#if NETFX_CORE
+#if NETFX_CORE || WINDOWS_81_PORTABLE
             var frame = Window.Current.Content as Frame;
             var width = (frame != null) ? frame.ActualWidth : 1024;
-#else
+#elif WINDOWS_PHONE
             var frame = Application.Current.RootVisual as PhoneApplicationFrame;
             var width = (frame != null) ? frame.ActualWidth : 250;
 #endif
@@ -163,10 +163,10 @@ namespace Brain.Animate
 
         public override IEnumerable<Timeline> CreateAnimation(FrameworkElement element)
         {
-#if NETFX_CORE
+#if NETFX_CORE || WINDOWS_81_PORTABLE
             var frame = Window.Current.Content as Frame;
             var width = (frame != null) ? frame.ActualWidth : 1024;
-#else
+#elif WINDOWS_PHONE
             var frame = Application.Current.RootVisual as PhoneApplicationFrame;
             var width = (frame != null) ? frame.ActualWidth : 250;
 #endif
@@ -207,10 +207,10 @@ namespace Brain.Animate
 
         public override IEnumerable<Timeline> CreateAnimation(FrameworkElement element)
         {
-#if NETFX_CORE
+#if NETFX_CORE || WINDOWS_81_PORTABLE
             var frame = Window.Current.Content as Frame;
             var width = (frame != null) ? frame.ActualWidth : 1024;
-#else
+#elif WINDOWS_PHONE
             var frame = Application.Current.RootVisual as PhoneApplicationFrame;
             var width = (frame != null) ? frame.ActualWidth : 250;
 #endif
@@ -251,10 +251,10 @@ namespace Brain.Animate
 
         public override IEnumerable<Timeline> CreateAnimation(FrameworkElement element)
         {
-#if NETFX_CORE
+#if NETFX_CORE || WINDOWS_81_PORTABLE
             var frame = Window.Current.Content as Frame;
             var width = (frame != null) ? frame.ActualWidth : 1024;
-#else
+#elif WINDOWS_PHONE
             var frame = Application.Current.RootVisual as PhoneApplicationFrame;
             var width = (frame != null) ? frame.ActualWidth : 250;
 #endif
@@ -300,10 +300,10 @@ namespace Brain.Animate
 
         public override IEnumerable<Timeline> CreateAnimation(FrameworkElement element)
         {
-#if NETFX_CORE
+#if NETFX_CORE || WINDOWS_81_PORTABLE
             var frame = Window.Current.Content as Frame;
             var width = (frame != null) ? frame.ActualWidth : 1024;
-#else
+#elif WINDOWS_PHONE
             var frame = Application.Current.RootVisual as PhoneApplicationFrame;
             var width = (frame != null) ? frame.ActualWidth : 250;
 #endif
