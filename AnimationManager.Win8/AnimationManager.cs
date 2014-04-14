@@ -210,6 +210,11 @@ namespace Brain.Animate
             }
         }
 
+        public bool ContainsStoryboard(FrameworkElement element)
+        {
+            return _frameworkStoryboards.ContainsKey(element);
+        }
+
 
         public static Storyboard AnimationStoryboard(
             FrameworkElement element,
@@ -311,6 +316,11 @@ namespace Brain.Animate
             }
 
             return sb;
+        }
+
+        public static bool IsAnimating(FrameworkElement element)
+        {
+            return Manager.ContainsStoryboard(element);
         }
 
         public static void StopAnimations(FrameworkElement element)
