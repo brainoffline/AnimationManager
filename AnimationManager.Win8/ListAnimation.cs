@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using Windows.Foundation;
 using Brain.Animate.Extensions;
 
 #if NETFX_CORE || WINDOWS_81_PORTABLE
@@ -88,6 +89,12 @@ namespace Brain.Animate
         {
             var itemsControl = sender as ItemsControl;
             if (itemsControl == null) return;
+#if WINDOWS_81_PORTABLE
+            if (sizeChangedEventArgs.PreviousSize.Width <= 0)
+                return;
+
+            //itemsControl.SizeChanged -= OnSizeChanged;
+#endif
 
             var animationDefinition = GetLoadItem(itemsControl);
             if (animationDefinition == null) return;
@@ -98,7 +105,7 @@ namespace Brain.Animate
         }
 
 
-        public static async void UnloadItemsAnimation(ItemsControl itemsControl)
+        public static async Task UnloadItemsAnimation(ItemsControl itemsControl)
         {
             var animationDefinition = GetUnloadItem(itemsControl);
             if (animationDefinition == null) return;

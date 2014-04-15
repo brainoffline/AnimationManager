@@ -10,6 +10,7 @@ using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Controls.Primitives;
 #endif
 #if WINDOWS_PHONE
 using System.Windows.Controls;
@@ -64,6 +65,61 @@ namespace Brain.Animate.Extensions
 
             await Task.WhenAll(animations.ToArray());
         }
+
+#elif WINDOWS_81_PORTABLE
+
+        public static async Task AnimateItems(
+            this Selector itemsControl,
+            AnimationDefinition animationDefinition,
+            double itemDelay = 0.05,
+            object selectedObject = null,
+            AnimationDefinition selectedItemAnimationDefinition = null)
+        {
+            if (itemsControl == null) return;
+            if (animationDefinition == null) return;
+            if (itemDelay <= 0.0)
+                itemDelay = 0.05;
+
+            itemsControl.UpdateLayout();
+
+            var animations = new List<Task>();
+
+            double baseDelay = animationDefinition.Delay;
+            for (int index = 0; index < itemsControl.Items.Count; index++)
+            {
+                var container = (FrameworkElement)itemsControl.ContainerFromItem(itemsControl.Items[index]);
+                //var container = (FrameworkElement)itemsControl.ItemContainerGenerator.ContainerFromIndex(index);
+                if (container == null) continue;
+
+                bool found = false;
+                if (selectedItemAnimationDefinition != null)
+                {
+                    if ((index == itemsControl.SelectedIndex) ||
+                        ((selectedObject != null) && (itemsControl.Items != null) && (selectedObject == itemsControl.Items[index]))
+                        )
+                    {
+                        found = true;
+
+                        animationDefinition.Delay = baseDelay;
+                        AnimationManager.ClearAnimationProperties(container);
+                        animations.Add(
+                            container.AnimateAsync(selectedItemAnimationDefinition));
+                    }
+                }
+                if (!found)
+                {
+                    animationDefinition.Delay = baseDelay + (itemDelay * index);
+                    AnimationManager.ClearAnimationProperties(container);
+                    animations.Add(
+                        container.AnimateAsync(animationDefinition));
+                }
+            }
+
+            animationDefinition.Delay = baseDelay;
+
+            await Task.WhenAll(animations.ToArray());
+        }
+
 
 #endif
 
