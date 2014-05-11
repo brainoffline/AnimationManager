@@ -66,7 +66,7 @@ namespace Brain.Animate.Extensions
             await Task.WhenAll(animations.ToArray());
         }
 
-#elif WINDOWS_81_PORTABLE
+#elif WINDOWS_81_PORTABLE || WINDOWS_PHONE_APP
 
         public static async Task AnimateItems(
             this Selector itemsControl,

@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>d729d034-893b-4d9b-8b0a-15bf6aa87dbb</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>AnimationManager.Shared</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)AnimatedImage.xaml.cs">
+      <DependentUpon>AnimatedImage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)AnimatingTextBlock.xaml.cs">
+      <DependentUpon>AnimatingTextBlock.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)AnimationDefinitions\AnimationDefinition.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AnimationDefinitions\AttentionAnimations.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AnimationDefinitions\BounceAnimations.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AnimationDefinitions\FadeAnimations.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AnimationDefinitions\FlipAnimations.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AnimationDefinitions\FrameAnimations.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AnimationDefinitions\HingeAnimation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AnimationDefinitions\LightSpeedAnimations.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AnimationDefinitions\ResetAnimation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AnimationDefinitions\RotateAnimations.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AnimationDefinitions\ScaleAnimations.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AnimationDefinitions\TurnstileAnimations.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AnimationEntensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AnimationFrame.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AnimationManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AnimationProperty.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AnimationTrigger.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Converters.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DropShaddow.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\DependencyObjectExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\ItemsControlExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\StoryboardExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ListAnimation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NavigationAnimations\NavigationAnimationDefinition.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PanControl.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="$(MSBuildThisFileDirectory)AnimatedImage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)AnimatingTextBlock.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Themes\Generic.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="$(MSBuildThisFileDirectory)Images\OvalShaddow.png" />
+  </ItemGroup>
+</Project>

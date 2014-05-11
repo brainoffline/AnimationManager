@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -180,11 +180,11 @@ namespace Brain.Animate
                 {
                     var list = new List<Task<FrameworkElement>>();
 
-                    if (closeAnimation != null) 
+                    if (closeAnimation != null)
                         list.Add(_oldContentPresenter.AnimateAsync(closeAnimation));
-                    if (openAnimation != null) 
+                    if (openAnimation != null)
                         list.Add(_newContentPresenter.AnimateAsync(openAnimation));
-                    await Task.WhenAll( list );
+                    await Task.WhenAll(list);
                 }
             }
             finally
@@ -201,8 +201,8 @@ namespace Brain.Animate
         }
 
         internal void SetNextNavigationAnimation(
-            AnimationDefinition closeAnimation, 
-            AnimationDefinition openAnimation, 
+            AnimationDefinition closeAnimation,
+            AnimationDefinition openAnimation,
             bool sequential)
         {
             OneOffAnimation_Close = closeAnimation;
