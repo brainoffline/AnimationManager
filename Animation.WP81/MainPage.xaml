@@ -5,10 +5,22 @@
     xmlns:local="using:Animation.WP81"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:bam="using:Brain.Animate"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
+
+        <bam:AnimatingTextBlock 
+                    x:Name="animatingPlay" Text="SPINR" 
+                    FontFamily="Segoe WP Semibold"
+                    FontSize="150" Foreground="White"
+                    Interval="0.1" PauseAfter="3"
+                    >
+            <bam:AnimatingTextBlock.IdleAnimation>
+                <bam:FlipAnimation Delay="3" />
+            </bam:AnimatingTextBlock.IdleAnimation>
+        </bam:AnimatingTextBlock>
 
     </Grid>
 </Page>

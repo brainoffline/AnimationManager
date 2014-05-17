@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
         <id>AnimationManager</id>
-        <version>0.5.1.78</version>
+        <version>0.5.1.81</version>
         <authors>Brian Donovan-Smith</authors>
         <owners>Brian Donovan-Smith</owners>
         <iconUrl>http://download-codeplex.sec.s-msft.com/Download?ProjectName=AnimationManager%26DownloadId=776458</iconUrl>

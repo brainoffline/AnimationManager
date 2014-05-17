@@ -101,60 +101,12 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
-    <Page Include="AnimatedImage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="AnimatingTextBlock.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Themes\Generic.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="AnimatedImage.xaml.cs">
-      <DependentUpon>AnimatedImage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="ListAnimation.cs" />
-    <Compile Include="AnimatingTextBlock.xaml.cs">
-      <DependentUpon>AnimatingTextBlock.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="AnimationDefinitions\AnimationDefinition.cs" />
-    <Compile Include="AnimationDefinitions\BounceAnimations.cs" />
-    <Compile Include="AnimationDefinitions\AttentionAnimations.cs" />
-    <Compile Include="AnimationDefinitions\FlipAnimations.cs" />
-    <Compile Include="AnimationDefinitions\FrameAnimations.cs" />
-    <Compile Include="AnimationDefinitions\HingeAnimation.cs" />
-    <Compile Include="AnimationDefinitions\LightSpeedAnimations.cs" />
-    <Compile Include="AnimationDefinitions\ResetAnimation.cs" />
-    <Compile Include="AnimationDefinitions\RotateAnimations.cs" />
-    <Compile Include="AnimationDefinitions\ScaleAnimations.cs" />
-    <Compile Include="AnimationDefinitions\TurnstileAnimations.cs" />
-    <Compile Include="AnimationEntensions.cs" />
-    <Compile Include="AnimationFrame.cs" />
-    <Compile Include="AnimationManager.cs" />
-    <Compile Include="AnimationProperty.cs" />
-    <Compile Include="AnimationTrigger.cs" />
-    <Compile Include="Converters.cs" />
-    <Compile Include="DropShaddow.cs" />
-    <Compile Include="AnimationDefinitions\FadeAnimations.cs" />
-    <Compile Include="Extensions\DependencyObjectExtensions.cs" />
-    <Compile Include="Extensions\ItemsControlExtensions.cs" />
-    <Compile Include="Extensions\StoryboardExtensions.cs" />
-    <Compile Include="NavigationAnimations\NavigationAnimationDefinition.cs" />
-    <Compile Include="PanControl.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Images\OvalShaddow.png" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '12.0' ">
     <VisualStudioVersion>12.0</VisualStudioVersion>
   </PropertyGroup>
+  <Import Project="..\AnimationManager.Shared\AnimationManager.Shared.projitems" Label="Shared" Condition="Exists('..\AnimationManager.Shared\AnimationManager.Shared.projitems')" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>copy "$(TargetPath)" "$(SolutionDir)\NugetPackage"</PostBuildEvent>

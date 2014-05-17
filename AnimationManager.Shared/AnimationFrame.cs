@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Brain.Animate.NavigationAnimations;
+#if WINDOWS_81_PORTABLE || NETFX_CORE
 
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -208,3 +209,5 @@ namespace Brain.Animate
         }
     }
 }
+
+#endif

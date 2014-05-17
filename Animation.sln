@@ -45,7 +45,18 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Images", "Images", "{0E6605
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Animation.WP81", "Animation.WP81\Animation.WP81.csproj", "{084D2D4B-6AC9-4595-985E-63D5E1A202D3}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "AnimationManager.Shared", "AnimationManager.Shared\AnimationManager.Shared.shproj", "{D729D034-893B-4D9B-8B0A-15BF6AA87DBB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnimationManager.WP81", "AnimationManager.WP81\AnimationManager.WP81.csproj", "{D13C713D-1DB5-4C3F-9DFA-F5AE22ED6F46}"
+EndProject
 Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		AnimationManager.Shared\AnimationManager.Shared.projitems*{1dd045b7-8a34-45e6-bcc3-16170f6464fc}*SharedItemsImports = 4
+		AnimationManager.Shared\AnimationManager.Shared.projitems*{febaac62-9d8c-4c6c-9b26-7620c7abc122}*SharedItemsImports = 4
+		AnimationManager.Shared\AnimationManager.Shared.projitems*{d13c713d-1db5-4c3f-9dfa-f5ae22ed6f46}*SharedItemsImports = 4
+		AnimationManager.Shared\AnimationManager.Shared.projitems*{d729d034-893b-4d9b-8b0a-15bf6aa87dbb}*SharedItemsImports = 13
+		AnimationManager.Shared\AnimationManager.Shared.projitems*{6c996f92-8b49-4001-b87b-9e04f41dda50}*SharedItemsImports = 4
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|ARM = Debug|ARM
@@ -181,6 +192,20 @@ Global
 		{084D2D4B-6AC9-4595-985E-63D5E1A202D3}.Release|x86.ActiveCfg = Release|x86
 		{084D2D4B-6AC9-4595-985E-63D5E1A202D3}.Release|x86.Build.0 = Release|x86
 		{084D2D4B-6AC9-4595-985E-63D5E1A202D3}.Release|x86.Deploy.0 = Release|x86
+		{D13C713D-1DB5-4C3F-9DFA-F5AE22ED6F46}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D13C713D-1DB5-4C3F-9DFA-F5AE22ED6F46}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D13C713D-1DB5-4C3F-9DFA-F5AE22ED6F46}.Debug|ARM.ActiveCfg = Debug|ARM
+		{D13C713D-1DB5-4C3F-9DFA-F5AE22ED6F46}.Debug|ARM.Build.0 = Debug|ARM
+		{D13C713D-1DB5-4C3F-9DFA-F5AE22ED6F46}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{D13C713D-1DB5-4C3F-9DFA-F5AE22ED6F46}.Debug|x86.ActiveCfg = Debug|x86
+		{D13C713D-1DB5-4C3F-9DFA-F5AE22ED6F46}.Debug|x86.Build.0 = Debug|x86
+		{D13C713D-1DB5-4C3F-9DFA-F5AE22ED6F46}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D13C713D-1DB5-4C3F-9DFA-F5AE22ED6F46}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D13C713D-1DB5-4C3F-9DFA-F5AE22ED6F46}.Release|ARM.ActiveCfg = Release|ARM
+		{D13C713D-1DB5-4C3F-9DFA-F5AE22ED6F46}.Release|ARM.Build.0 = Release|ARM
+		{D13C713D-1DB5-4C3F-9DFA-F5AE22ED6F46}.Release|x64.ActiveCfg = Release|Any CPU
+		{D13C713D-1DB5-4C3F-9DFA-F5AE22ED6F46}.Release|x86.ActiveCfg = Release|x86
+		{D13C713D-1DB5-4C3F-9DFA-F5AE22ED6F46}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -193,5 +218,7 @@ Global
 		{C081366C-CE5C-447F-A447-98975A73CF8C} = {AF3C2F87-8508-4D3E-9418-D40635AA9D2C}
 		{6C996F92-8B49-4001-B87B-9E04F41DDA50} = {C2909148-2167-4B81-9C45-E37915230EDE}
 		{084D2D4B-6AC9-4595-985E-63D5E1A202D3} = {AF3C2F87-8508-4D3E-9418-D40635AA9D2C}
+		{D729D034-893B-4D9B-8B0A-15BF6AA87DBB} = {C2909148-2167-4B81-9C45-E37915230EDE}
+		{D13C713D-1DB5-4C3F-9DFA-F5AE22ED6F46} = {C2909148-2167-4B81-9C45-E37915230EDE}
 	EndGlobalSection
 EndGlobal

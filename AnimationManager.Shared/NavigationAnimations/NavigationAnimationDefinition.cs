@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace Brain.Animate.NavigationAnimations
 {
     /// <summary>
@@ -217,3 +218,4 @@ namespace Brain.Animate.NavigationAnimations
         }
     }
 }
+

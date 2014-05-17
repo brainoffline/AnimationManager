@@ -1,26 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 
 #if NETFX_CORE || WINDOWS_81_PORTABLE
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Documents;
-using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
-#endif
 
-#if WINDOWS_PHONE
+#elif WINDOWS_PHONE
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -31,7 +20,7 @@ using System.Windows.Media;
 
 namespace Brain.Animate
 {
-    public sealed partial class AnimatingTextBlock 
+    public sealed partial class AnimatingTextBlock : UserControl
     {
         public AnimatingTextBlock()
         {
@@ -57,7 +46,14 @@ namespace Brain.Animate
                 var s = Text.Substring(i, 1);
                 if (string.IsNullOrWhiteSpace(s)) continue;
 
-                var tb = new TextBlock();
+                var tb = new TextBlock
+                {
+                    FontFamily = FontFamily,
+                    FontSize = FontSize,
+                    FontStyle = FontStyle,
+                    FontWeight = FontWeight
+                };
+
                 if (i == 0)
                     tb.Text = Text.Substring(0, 1);
                 else
@@ -105,7 +101,13 @@ namespace Brain.Animate
                     var s = Text.Substring(i, 1);
                     if (string.IsNullOrWhiteSpace(s)) continue;
 
-                    var tb = new TextBlock();
+                    var tb = new TextBlock
+                    {
+                        FontFamily = FontFamily,
+                        FontSize = FontSize,
+                        FontStyle = FontStyle,
+                        FontWeight = FontWeight
+                    };
                     if (i == 0)
                         tb.Text = Text.Substring(0, 1);
                     else
