@@ -26,6 +26,8 @@ namespace Brain.Animate
 
         public override IEnumerable<Timeline> CreateAnimation(FrameworkElement element)
         {
+            var transform = GetTransform(element);
+
             var list = new List<Timeline>
             {
                 element.AnimateProperty(AnimationProperty.Opacity)
@@ -36,15 +38,15 @@ namespace Brain.Animate
             {
                 list.Add(
                     element.AnimateProperty(AnimationProperty.TranslateX)
-                        .AddEasingKeyFrame(0.0, DistanceX)
-                        .AddEasingKeyFrame(Duration, 0, new CubicEase()));
+                        .AddEasingKeyFrame(0.0, transform.TranslateX + DistanceX)
+                        .AddEasingKeyFrame(Duration, transform.TranslateX, new CubicEase()));
             }
             if (Math.Abs(DistanceY) > 0)
             {
                 list.Add(
                     element.AnimateProperty(AnimationProperty.TranslateY)
-                        .AddEasingKeyFrame(0.0, DistanceY)
-                        .AddEasingKeyFrame(Duration, 0, new CubicEase()));
+                        .AddEasingKeyFrame(0.0, transform.TranslateY + DistanceY)
+                        .AddEasingKeyFrame(Duration, transform.TranslateY, new CubicEase()));
             }
 
             return list;
@@ -63,6 +65,8 @@ namespace Brain.Animate
 
         public override IEnumerable<Timeline> CreateAnimation(FrameworkElement element)
         {
+            var transform = GetTransform(element);
+
             var list = new List<Timeline>
             {
                 element.AnimateProperty(AnimationProperty.Opacity)
@@ -74,15 +78,15 @@ namespace Brain.Animate
             {
                 list.Add(
                     element.AnimateProperty(AnimationProperty.TranslateX)
-                           .AddEasingKeyFrame(0.0, 0)
-                           .AddEasingKeyFrame(Duration, DistanceX));
+                           .AddEasingKeyFrame(0.0, transform.TranslateX)
+                           .AddEasingKeyFrame(Duration, transform.TranslateX + DistanceX));
             }
             if (Math.Abs(DistanceY) > 0)
             {
                 list.Add(
                     element.AnimateProperty(AnimationProperty.TranslateY)
-                           .AddEasingKeyFrame(0.0, 0)
-                           .AddEasingKeyFrame(Duration, DistanceY));
+                           .AddEasingKeyFrame(0.0, transform.TranslateY)
+                           .AddEasingKeyFrame(Duration, transform.TranslateY + DistanceY));
             }
 
             return list;
@@ -90,207 +94,123 @@ namespace Brain.Animate
     }
 
 
-    public class FadeInUpAnimation : AnimationDefinition
+    public class FadeInUpAnimation : FadeInAnimation
     {
+        public double Distance
+        {
+            get { return DistanceY; }
+            set { DistanceY = value; }
+        }
+
         public FadeInUpAnimation()
         {
-            Duration = 0.4;
             Distance = 20;
-            OpacityFromZero = true;
-        }
-
-        public double Distance { get; set; }
-
-        public override IEnumerable<Timeline> CreateAnimation(FrameworkElement element)
-        {
-            return new Timeline[]
-            {
-                element.AnimateProperty(AnimationProperty.TranslateY)
-                    .AddEasingKeyFrame(0.0, Distance)
-                    .AddEasingKeyFrame(Duration, 0, new CubicEase()),
-                element.AnimateProperty(AnimationProperty.Opacity)
-                    .AddEasingKeyFrame(0.0, 0)
-                    .AddEasingKeyFrame(Duration, 1),
-            };
         }
     }
 
 
-    public class FadeInDownAnimation : AnimationDefinition
+    public class FadeInDownAnimation : FadeInAnimation
     {
+        public double Distance
+        {
+            get { return DistanceY; }
+            set { DistanceY = value; }
+        }
+
         public FadeInDownAnimation()
         {
-            Duration = 0.4;
-            Distance = 20;
-            OpacityFromZero = true;
-        }
-
-        public double Distance { get; set; }
-
-        public override IEnumerable<Timeline> CreateAnimation(FrameworkElement element)
-        {
-            return new Timeline[]
-            {
-                element.AnimateProperty(AnimationProperty.TranslateY)
-                    .AddEasingKeyFrame(0.0, -Distance)
-                    .AddEasingKeyFrame(Duration, 0, new CubicEase()),
-                element.AnimateProperty(AnimationProperty.Opacity)
-                    .AddEasingKeyFrame(0.0, 0)
-                    .AddEasingKeyFrame(Duration, 1),
-            };
+            Distance = -20;
         }
     }
 
 
-    public class FadeInLeftAnimation : AnimationDefinition
+    public class FadeInLeftAnimation : FadeInAnimation
     {
+        public double Distance
+        {
+            get { return DistanceY; }
+            set { DistanceY = value; }
+        }
+
         public FadeInLeftAnimation()
         {
-            Duration = 0.4;
             Distance = 20;
-            OpacityFromZero = true;
-        }
-
-        public double Distance { get; set; }
-
-        public override IEnumerable<Timeline> CreateAnimation(FrameworkElement element)
-        {
-            return new Timeline[]
-            {
-                element.AnimateProperty(AnimationProperty.TranslateX)
-                    .AddEasingKeyFrame(0.0, Distance)
-                    .AddEasingKeyFrame(Duration, 0, new CubicEase()),
-                element.AnimateProperty(AnimationProperty.Opacity)
-                    .AddEasingKeyFrame(0.0, 0)
-                    .AddEasingKeyFrame(Duration, 1),
-            };
         }
     }
 
 
-    public class FadeInRightAnimation : AnimationDefinition
+    public class FadeInRightAnimation : FadeInAnimation
     {
+        public double Distance
+        {
+            get { return DistanceY; }
+            set { DistanceY = value; }
+        }
+
         public FadeInRightAnimation()
         {
-            Duration = 0.4;
-            Distance = 20;
-            OpacityFromZero = true;
-        }
-
-        public double Distance { get; set; }
-
-        public override IEnumerable<Timeline> CreateAnimation(FrameworkElement element)
-        {
-            return new Timeline[]
-            {
-                element.AnimateProperty(AnimationProperty.TranslateX)
-                    .AddEasingKeyFrame(0.0, -Distance)
-                    .AddEasingKeyFrame(Duration, 0, new CubicEase()),
-                element.AnimateProperty(AnimationProperty.Opacity)
-                    .AddEasingKeyFrame(0.0, 0)
-                    .AddEasingKeyFrame(Duration, 1),
-            };
+            Distance = -20;
         }
     }
 
 
 
-    public class FadeOutUpAnimation : AnimationDefinition
+    public class FadeOutUpAnimation : FadeOutAnimation
     {
+        public double Distance
+        {
+            get { return DistanceY; }
+            set { DistanceY = value; }
+        }
+
         public FadeOutUpAnimation()
         {
-            Duration = 0.4;
-            Distance = 20;
-        }
-
-        public double Distance { get; set; }
-
-        public override IEnumerable<Timeline> CreateAnimation(FrameworkElement element)
-        {
-            return new Timeline[]
-            {
-                element.AnimateProperty(AnimationProperty.TranslateY)
-                    .AddEasingKeyFrame(0.0, 0)
-                    .AddEasingKeyFrame(Duration, -Distance),
-                element.AnimateProperty(AnimationProperty.Opacity)
-                    .AddEasingKeyFrame(0.0, 1)
-                    .AddEasingKeyFrame(Duration, 0),
-            };
+            Distance = -20;
         }
     }
 
 
-    public class FadeOutDownAnimation : AnimationDefinition
+    public class FadeOutDownAnimation : FadeOutAnimation
     {
+        public double Distance
+        {
+            get { return DistanceY; }
+            set { DistanceY = value; }
+        }
+
         public FadeOutDownAnimation()
         {
-            Duration = 0.4;
             Distance = 20;
-        }
-
-        public double Distance { get; set; }
-
-        public override IEnumerable<Timeline> CreateAnimation(FrameworkElement element)
-        {
-            return new Timeline[]
-            {
-                element.AnimateProperty(AnimationProperty.TranslateY)
-                    .AddEasingKeyFrame(0.0, 0)
-                    .AddEasingKeyFrame(Duration, Distance),
-                element.AnimateProperty(AnimationProperty.Opacity)
-                    .AddEasingKeyFrame(0.0, 1)
-                    .AddEasingKeyFrame(Duration, 0)
-            };
         }
     }
 
 
-    public class FadeOutLeftAnimation : AnimationDefinition
+    public class FadeOutLeftAnimation : FadeOutAnimation
     {
+        public double Distance
+        {
+            get { return DistanceX; }
+            set { DistanceX = value; }
+        }
+
         public FadeOutLeftAnimation()
         {
-            Duration = 0.4;
-            Distance = 20;
-        }
-
-        public double Distance { get; set; }
-
-        public override IEnumerable<Timeline> CreateAnimation(FrameworkElement element)
-        {
-            return new Timeline[]
-            {
-                element.AnimateProperty(AnimationProperty.TranslateX)
-                    .AddEasingKeyFrame(0.0, 0)
-                    .AddEasingKeyFrame(Duration, -Distance),
-                element.AnimateProperty(AnimationProperty.Opacity)
-                    .AddEasingKeyFrame(0.0, 1)
-                    .AddEasingKeyFrame(Duration, 0)
-            };
+            Distance = -20;
         }
     }
 
 
-    public class FadeOutRightAnimation : AnimationDefinition
+    public class FadeOutRightAnimation : FadeOutAnimation
     {
-        public FadeOutRightAnimation()
+        public double Distance
         {
-            Duration = 0.4;
-            Distance = 20;
+            get { return DistanceY; }
+            set { DistanceY = value; }
         }
 
-        public double Distance { get; set; }
-
-        public override IEnumerable<Timeline> CreateAnimation(FrameworkElement element)
+        public FadeOutRightAnimation()
         {
-            return new Timeline[]
-            {
-                element.AnimateProperty(AnimationProperty.TranslateX)
-                    .AddEasingKeyFrame(0.0, 0)
-                    .AddEasingKeyFrame(Duration, Distance),
-                element.AnimateProperty(AnimationProperty.Opacity)
-                    .AddEasingKeyFrame(0.0, 1)
-                    .AddEasingKeyFrame(Duration, 0),
-            };
+            Distance = 20;
         }
     }
 

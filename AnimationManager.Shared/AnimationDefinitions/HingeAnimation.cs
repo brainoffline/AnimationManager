@@ -36,6 +36,8 @@ namespace Brain.Animate
 
         public override IEnumerable<Timeline> CreateAnimation(FrameworkElement element)
         {
+            var transform = GetTransform(element);
+
             if (Side == Side.Left)
                 return new Timeline[]
                 {
@@ -51,8 +53,8 @@ namespace Brain.Animate
                         .AddEasingKeyFrame(Duration, 70),
 
                     element.AnimateProperty(AnimationProperty.TranslateY)
-                        .AddEasingKeyFrame(Duration*0.7, 0)
-                        .AddEasingKeyFrame(Duration, Distance, new CubicEase { EasingMode = EasingMode.EaseIn}),
+                        .AddEasingKeyFrame(Duration*0.7, transform.TranslateY)
+                        .AddEasingKeyFrame(Duration, transform.TranslateY + Distance, new CubicEase { EasingMode = EasingMode.EaseIn}),
 
                     element.AnimateProperty(AnimationProperty.Opacity)
                         .AddEasingKeyFrame(0.0, 1)
@@ -73,8 +75,8 @@ namespace Brain.Animate
                     .AddEasingKeyFrame(Duration,-70),
 
                 element.AnimateProperty(AnimationProperty.TranslateY)
-                    .AddEasingKeyFrame(Duration*0.7, 0)
-                    .AddEasingKeyFrame(Duration, Distance, new CubicEase { EasingMode = EasingMode.EaseIn}),
+                    .AddEasingKeyFrame(Duration*0.7, transform.TranslateY)
+                    .AddEasingKeyFrame(Duration, transform.TranslateY + Distance, new CubicEase { EasingMode = EasingMode.EaseIn}),
 
                 element.AnimateProperty(AnimationProperty.Opacity)
                     .AddEasingKeyFrame(0.0, 1)

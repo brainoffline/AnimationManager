@@ -80,28 +80,30 @@ namespace Brain.Animate
 
         public override IEnumerable<Timeline> CreateAnimation(FrameworkElement element)
         {
+            var transform = GetTransform(element);
+
             var animations = new List<Timeline>();
             if (Math.Abs(DistanceY) > 0.001)
                 animations.Add(
                     element.AnimateProperty(AnimationProperty.TranslateY)
-                        .AddEasingKeyFrame(0.0, 0)
-                        .AddEasingKeyFrame(Duration*0.2, 0)
-                        .AddEasingKeyFrame(Duration*0.4, DistanceY)
-                        .AddEasingKeyFrame(Duration*0.5, 0)
-                        .AddEasingKeyFrame(Duration*0.6, DistanceY/2)
-                        .AddEasingKeyFrame(Duration*0.8, 0)
-                        .AddEasingKeyFrame(Duration, 0)
+                        .AddEasingKeyFrame(0.0, transform.TranslateY)
+                        .AddEasingKeyFrame(Duration * 0.2, transform.TranslateY)
+                        .AddEasingKeyFrame(Duration * 0.4, transform.TranslateY + DistanceY)
+                        .AddEasingKeyFrame(Duration * 0.5, transform.TranslateY)
+                        .AddEasingKeyFrame(Duration * 0.6, transform.TranslateY + (DistanceY / 2))
+                        .AddEasingKeyFrame(Duration * 0.8, transform.TranslateY)
+                        .AddEasingKeyFrame(Duration, transform.TranslateY)
                     );
             if (Math.Abs(DistanceX) > 0.001)
                 animations.Add(
                     element.AnimateProperty(AnimationProperty.TranslateX)
-                        .AddEasingKeyFrame(0.0, 0)
-                        .AddEasingKeyFrame(Duration * 0.2, 0)
-                        .AddEasingKeyFrame(Duration * 0.4, DistanceX)
-                        .AddEasingKeyFrame(Duration * 0.5, 0)
-                        .AddEasingKeyFrame(Duration * 0.6, DistanceX / 2)
-                        .AddEasingKeyFrame(Duration * 0.8, 0)
-                        .AddEasingKeyFrame(Duration, 0)
+                        .AddEasingKeyFrame(0.0, transform.TranslateX)
+                        .AddEasingKeyFrame(Duration * 0.2, transform.TranslateX)
+                        .AddEasingKeyFrame(Duration * 0.4, transform.TranslateX + DistanceX)
+                        .AddEasingKeyFrame(Duration * 0.5, transform.TranslateX)
+                        .AddEasingKeyFrame(Duration * 0.6, transform.TranslateX + (DistanceX / 2))
+                        .AddEasingKeyFrame(Duration * 0.8, transform.TranslateX)
+                        .AddEasingKeyFrame(Duration, transform.TranslateX)
                     );
             return animations;
         }
@@ -121,36 +123,37 @@ namespace Brain.Animate
         public override IEnumerable<Timeline> CreateAnimation(FrameworkElement element)
         {
             var animations = new List<Timeline>();
+            var transform = GetTransform(element);
 
             if (Math.Abs(DistanceX) > 0.001)
                 animations.Add(
                     element.AnimateProperty(AnimationProperty.TranslateX)
-                        .AddEasingKeyFrame(0.0, 0)
-                        .AddEasingKeyFrame(Duration * 0.1, -DistanceX)
-                        .AddEasingKeyFrame(Duration * 0.2, DistanceX)
-                        .AddEasingKeyFrame(Duration * 0.3, -DistanceX)
-                        .AddEasingKeyFrame(Duration * 0.4, DistanceX)
-                        .AddEasingKeyFrame(Duration * 0.5, -DistanceX)
-                        .AddEasingKeyFrame(Duration * 0.6, DistanceX)
-                        .AddEasingKeyFrame(Duration * 0.7, -DistanceX)
-                        .AddEasingKeyFrame(Duration * 0.8, DistanceX)
-                        .AddEasingKeyFrame(Duration * 0.9, -DistanceX)
-                        .AddEasingKeyFrame(Duration, 0)
+                        .AddEasingKeyFrame(0.0, transform.TranslateX)
+                        .AddEasingKeyFrame(Duration * 0.1, transform.TranslateX - DistanceX)
+                        .AddEasingKeyFrame(Duration * 0.2, transform.TranslateX + DistanceX)
+                        .AddEasingKeyFrame(Duration * 0.3, transform.TranslateX - DistanceX)
+                        .AddEasingKeyFrame(Duration * 0.4, transform.TranslateX + DistanceX)
+                        .AddEasingKeyFrame(Duration * 0.5, transform.TranslateX - DistanceX)
+                        .AddEasingKeyFrame(Duration * 0.6, transform.TranslateX + DistanceX)
+                        .AddEasingKeyFrame(Duration * 0.7, transform.TranslateX - DistanceX)
+                        .AddEasingKeyFrame(Duration * 0.8, transform.TranslateX + DistanceX)
+                        .AddEasingKeyFrame(Duration * 0.9, transform.TranslateX - DistanceX)
+                        .AddEasingKeyFrame(Duration, transform.TranslateX)
                     );
             if (Math.Abs(DistanceY) > 0.001)
                 animations.Add(
                     element.AnimateProperty(AnimationProperty.TranslateY)
-                        .AddEasingKeyFrame(0.0, 0)
-                        .AddEasingKeyFrame(Duration * 0.1, -DistanceY)
-                        .AddEasingKeyFrame(Duration * 0.2, DistanceY)
-                        .AddEasingKeyFrame(Duration * 0.3, -DistanceY)
-                        .AddEasingKeyFrame(Duration * 0.4, DistanceY)
-                        .AddEasingKeyFrame(Duration * 0.5, -DistanceY)
-                        .AddEasingKeyFrame(Duration * 0.6, DistanceY)
-                        .AddEasingKeyFrame(Duration * 0.7, -DistanceY)
-                        .AddEasingKeyFrame(Duration * 0.8, DistanceY)
-                        .AddEasingKeyFrame(Duration * 0.9, -DistanceY)
-                        .AddEasingKeyFrame(Duration, 0)
+                        .AddEasingKeyFrame(0.0, transform.TranslateY)
+                        .AddEasingKeyFrame(Duration * 0.1, transform.TranslateY - DistanceY)
+                        .AddEasingKeyFrame(Duration * 0.2, transform.TranslateY + DistanceY)
+                        .AddEasingKeyFrame(Duration * 0.3, transform.TranslateY - DistanceY)
+                        .AddEasingKeyFrame(Duration * 0.4, transform.TranslateY + DistanceY)
+                        .AddEasingKeyFrame(Duration * 0.5, transform.TranslateY - DistanceY)
+                        .AddEasingKeyFrame(Duration * 0.6, transform.TranslateY + DistanceY)
+                        .AddEasingKeyFrame(Duration * 0.7, transform.TranslateY - DistanceY)
+                        .AddEasingKeyFrame(Duration * 0.8, transform.TranslateY + DistanceY)
+                        .AddEasingKeyFrame(Duration * 0.9, transform.TranslateY - DistanceY)
+                        .AddEasingKeyFrame(Duration, transform.TranslateY)
                     );
 
             return animations;
@@ -238,6 +241,8 @@ namespace Brain.Animate
 
         public override IEnumerable<Timeline> CreateAnimation(FrameworkElement element)
         {
+            var transform = GetTransform(element);
+
             return new Timeline[]
             {
                 element.AnimateProperty(AnimationProperty.Rotation)
@@ -248,13 +253,13 @@ namespace Brain.Animate
                     .AddEasingKeyFrame(Duration*0.75, -1)
                     .AddEasingKeyFrame(Duration, 0),
                 element.AnimateProperty(AnimationProperty.TranslateX)
-                    .AddEasingKeyFrame(0.0, 0)
-                    .AddEasingKeyFrame(Duration*0.15, 0 - Distance)
-                    .AddEasingKeyFrame(Duration*0.3, Distance * 0.8)
-                    .AddEasingKeyFrame(Duration*0.45, 0 - (Distance * 0.6))
-                    .AddEasingKeyFrame(Duration*0.6, Distance * 0.4)
-                    .AddEasingKeyFrame(Duration*0.75, 0 - (Distance * 0.2))
-                    .AddEasingKeyFrame(Duration, 0)
+                    .AddEasingKeyFrame(0.0, transform.TranslateX)
+                    .AddEasingKeyFrame(Duration*0.15, transform.TranslateX - Distance)
+                    .AddEasingKeyFrame(Duration*0.3, transform.TranslateX + (Distance * 0.8))
+                    .AddEasingKeyFrame(Duration*0.45, transform.TranslateX - (Distance * 0.6))
+                    .AddEasingKeyFrame(Duration*0.6, transform.TranslateX + (Distance * 0.4))
+                    .AddEasingKeyFrame(Duration*0.75, transform.TranslateX - (Distance * 0.2))
+                    .AddEasingKeyFrame(Duration, transform.TranslateX)
             };
         }
     }
@@ -320,6 +325,8 @@ namespace Brain.Animate
 
         public override IEnumerable<Timeline> CreateAnimation(FrameworkElement element)
         {
+            var transform = GetTransform(element);
+
             return new Timeline[]
             {
                 element.AnimatePointProperty(AnimationProperty.RenderTransformOrigin)
@@ -332,12 +339,12 @@ namespace Brain.Animate
                     .AddEasingKeyFrame(Duration*1.0, 0.6)
                     .AddEasingKeyFrame(Duration*1.2, 1),
                 element.AnimateProperty(AnimationProperty.TranslateY)
-                    .AddEasingKeyFrame(0.0, 0)
-                    .AddEasingKeyFrame(Duration*0.2, 0)
-                    .AddEasingKeyFrame(Duration*0.4, Distance)
-                    .AddEasingKeyFrame(Duration*0.6, Distance)
-                    .AddEasingKeyFrame(Duration*0.8, Distance/2)
-                    .AddEasingKeyFrame(Duration*1.0, 0),
+                    .AddEasingKeyFrame(0.0, transform.TranslateY)
+                    .AddEasingKeyFrame(Duration*0.2, transform.TranslateY)
+                    .AddEasingKeyFrame(Duration*0.4, transform.TranslateY + Distance)
+                    .AddEasingKeyFrame(Duration*0.6, transform.TranslateY + Distance)
+                    .AddEasingKeyFrame(Duration*0.8, transform.TranslateY + (Distance/2))
+                    .AddEasingKeyFrame(Duration*1.0, transform.TranslateY),
             };
         }
     }

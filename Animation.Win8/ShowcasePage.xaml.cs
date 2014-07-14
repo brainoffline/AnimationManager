@@ -17,7 +17,6 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using Brain.Animate;
 
-// The Basic Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234237
 
 namespace Animation
 {

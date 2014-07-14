@@ -18,7 +18,7 @@ namespace Brain.Animate
 {
     public enum ZDirection
     {
-        Away, Closer
+        Away, Closer, Steady
     }
 
 
@@ -42,141 +42,97 @@ namespace Brain.Animate
 
         public override IEnumerable<Timeline> CreateAnimation(FrameworkElement element)
         {
-            var list = new List<Timeline>
+            var transform = GetTransform(element);
+
+            var list = new List<Timeline>();
+
+            if (FromDirection != ZDirection.Steady)
             {
-                element.AnimateProperty(AnimationProperty.ScaleX)
-                    .AddEasingKeyFrame(0.0, (FromDirection == ZDirection.Away ? 0.3 : 2.0))
-                    .AddEasingKeyFrame(Duration, 1, new BackEase {Amplitude = Amplitude}),
-                element.AnimateProperty(AnimationProperty.ScaleY)
-                    .AddEasingKeyFrame(0.0, (FromDirection == ZDirection.Away ? 0.3 : 2.0))
-                    .AddEasingKeyFrame(Duration, 1, new BackEase {Amplitude = Amplitude}),
+                list.Add(
+                    element.AnimateProperty(AnimationProperty.ScaleX)
+                        .AddEasingKeyFrame(0.0, (FromDirection == ZDirection.Away ? 0.3 : 2.0))
+                        .AddEasingKeyFrame(Duration, 1, new BackEase {Amplitude = Amplitude}));
+                list.Add(
+                    element.AnimateProperty(AnimationProperty.ScaleY)
+                        .AddEasingKeyFrame(0.0, (FromDirection == ZDirection.Away ? 0.3 : 2.0))
+                        .AddEasingKeyFrame(Duration, 1, new BackEase {Amplitude = Amplitude}));
+            };
+            list.Add(
                 element.AnimateProperty(AnimationProperty.Opacity)
                     .AddEasingKeyFrame(0.0, 0)
-                    .AddEasingKeyFrame(Duration/2, 1),
-            };
+                    .AddEasingKeyFrame(Duration/4, 1));
             if (Math.Abs(DistanceX) > 0)
             {
                 list.Add(
                     element.AnimateProperty(AnimationProperty.TranslateX)
-                    .AddEasingKeyFrame(0.0, DistanceX)
-                    .AddEasingKeyFrame(Duration, 0, new BackEase {Amplitude = Amplitude}));
+                    .AddEasingKeyFrame(0.0, transform.TranslateX + DistanceX)
+                    .AddEasingKeyFrame(Duration, transform.TranslateX, new BackEase {Amplitude = Amplitude}));
             }
             if (Math.Abs(DistanceY) > 0)
             {
                 list.Add(
                     element.AnimateProperty(AnimationProperty.TranslateY)
-                    .AddEasingKeyFrame(0.0, DistanceY)
-                    .AddEasingKeyFrame(Duration, 0, new BackEase {Amplitude = Amplitude}));
+                    .AddEasingKeyFrame(0.0, transform.TranslateY + DistanceY)
+                    .AddEasingKeyFrame(Duration, transform.TranslateY, new BackEase {Amplitude = Amplitude}));
             }
 
             return list;
         }
     }
 
-    public class BounceInUpAnimation : AnimationDefinition
+    public class BounceInUpAnimation : BounceInAnimation
     {
-        public double Distance { get; set; }
-        public double Amplitude { get; set; }
+        public double Distance
+        {
+            get { return DistanceY; }
+            set { DistanceY = value; }
+        }
 
         public BounceInUpAnimation()
         {
-            Duration = 0.4;
-            OpacityFromZero = true;
             Distance = 500;
-            Amplitude = 0.4;
-        }
-
-        public override IEnumerable<Timeline> CreateAnimation(FrameworkElement element)
-        {
-            return new Timeline[]
-            {
-                element.AnimateProperty(AnimationProperty.TranslateY)
-                    .AddEasingKeyFrame(0.0, Distance)
-                    .AddEasingKeyFrame(Duration, 0, new BackEase {Amplitude = Amplitude}),
-                element.AnimateProperty(AnimationProperty.Opacity)
-                    .AddEasingKeyFrame(0.0, 0)
-                    .AddEasingKeyFrame(Duration/2, 1),
-            };
         }
     }
 
-    public class BounceInDownAnimation : AnimationDefinition
+    public class BounceInDownAnimation : BounceInAnimation
     {
-        public double Distance { get; set; }
-        public double Amplitude { get; set; }
+        public double Distance
+        {
+            get { return DistanceY; }
+            set { DistanceY = value; }
+        }
 
         public BounceInDownAnimation()
         {
-            Duration = 0.4;
-            OpacityFromZero = true;
             Distance = -500;
-            Amplitude = 0.4;
-        }
-
-        public override IEnumerable<Timeline> CreateAnimation(FrameworkElement element)
-        {
-            return new Timeline[]
-            {
-                element.AnimateProperty(AnimationProperty.TranslateY)
-                    .AddEasingKeyFrame(0.0, Distance)
-                    .AddEasingKeyFrame(Duration, 0, new BackEase {Amplitude = Amplitude}),
-                element.AnimateProperty(AnimationProperty.Opacity)
-                    .AddEasingKeyFrame(0.0, 0)
-                    .AddEasingKeyFrame(Duration/2, 1),
-            };
         }
     }
 
-    public class BounceInLeftAnimation : AnimationDefinition
+    public class BounceInLeftAnimation : BounceInAnimation
     {
-        public double Distance { get; set; }
-        public double Amplitude { get; set; }
+        public double Distance
+        {
+            get { return DistanceX; }
+            set { DistanceX = value; }
+        }
 
         public BounceInLeftAnimation()
         {
-            Duration = 0.4;
-            OpacityFromZero = true;
             Distance = 500;
-            Amplitude = 0.4;
-        }
-        public override IEnumerable<Timeline> CreateAnimation(FrameworkElement element)
-        {
-            return new Timeline[]
-            {
-                element.AnimateProperty(AnimationProperty.TranslateX)
-                    .AddEasingKeyFrame(0.0, Distance)
-                    .AddEasingKeyFrame(Duration, 0, new BackEase {Amplitude = Amplitude}),
-                element.AnimateProperty(AnimationProperty.Opacity)
-                    .AddEasingKeyFrame(0.0, 0)
-                    .AddEasingKeyFrame(Duration, 1),
-            };
         }
     }
 
-    public class BounceInRightAnimation : AnimationDefinition
+    public class BounceInRightAnimation : BounceInAnimation
     {
-        public double Distance { get; set; }
-        public double Amplitude { get; set; }
+        public double Distance
+        {
+            get { return DistanceX; }
+            set { DistanceX = value; }
+        }
 
         public BounceInRightAnimation()
         {
-            Duration = 0.4;
-            OpacityFromZero = true;
             Distance = -500;
-            Amplitude = 0.4;
-        }
-
-        public override IEnumerable<Timeline> CreateAnimation(FrameworkElement element)
-        {
-            return new Timeline[]
-            {
-                element.AnimateProperty(AnimationProperty.TranslateX)
-                    .AddEasingKeyFrame(0.0, Distance)
-                    .AddEasingKeyFrame(Duration, 0, new BackEase {Amplitude = Amplitude}),
-                element.AnimateProperty(AnimationProperty.Opacity)
-                    .AddEasingKeyFrame(0.0, 0)
-                    .AddEasingKeyFrame(Duration, 1),
-            };
         }
     }
 
@@ -198,6 +154,8 @@ namespace Brain.Animate
 
         public override IEnumerable<Timeline> CreateAnimation(FrameworkElement element)
         {
+            var transform = GetTransform(element);
+
             var list = new List<Timeline>
             {
                 element.AnimateProperty(AnimationProperty.ScaleX)
@@ -215,125 +173,73 @@ namespace Brain.Animate
             {
                 list.Add(
                     element.AnimateProperty(AnimationProperty.TranslateX)
-                    .AddEasingKeyFrame(0.0, 0)
-                    .AddEasingKeyFrame(Duration, DistanceX, new BackEase {Amplitude = Amplitude, EasingMode = EasingMode.EaseIn}));
+                    //.AddEasingKeyFrame(0.0, transform.TranslateX)
+                    .AddEasingKeyFrame(Duration, transform.TranslateX + DistanceX, new BackEase {Amplitude = Amplitude, EasingMode = EasingMode.EaseIn}));
             }
             if (Math.Abs(DistanceY) > 0)
             {
                 list.Add(
                     element.AnimateProperty(AnimationProperty.TranslateY)
-                    .AddEasingKeyFrame(0.0, 0)
-                    .AddEasingKeyFrame(Duration, DistanceY, new BackEase {Amplitude = Amplitude, EasingMode = EasingMode.EaseIn}));
+                    //.AddEasingKeyFrame(0.0, transform.TranslateY)
+                    .AddEasingKeyFrame(Duration, transform.TranslateY + DistanceY, new BackEase {Amplitude = Amplitude, EasingMode = EasingMode.EaseIn}));
             }
             return list;
         }
     }
 
-    public class BounceOutUpAnimation : AnimationDefinition
+    public class BounceOutUpAnimation : BounceOutAnimation
     {
-        public double Amplitude { get; set; }
-        public double Distance { get; set; }
+        public double Distance
+        {
+            get { return DistanceY; }
+            set { DistanceY = value; }
+        }
 
         public BounceOutUpAnimation()
         {
-            Duration = 0.4;
             Distance = -500;
-            Amplitude = 0.4;
-        }
-
-        public override IEnumerable<Timeline> CreateAnimation(FrameworkElement element)
-        {
-            return new Timeline[]
-            {
-                element.AnimateProperty(AnimationProperty.TranslateY)
-                    .AddEasingKeyFrame(0.0, 0)
-                    .AddEasingKeyFrame(Duration, Distance, new BackEase {Amplitude = Amplitude, EasingMode = EasingMode.EaseIn}),
-                element.AnimateProperty(AnimationProperty.Opacity)
-                    .AddEasingKeyFrame(0.0, 1)
-                    .AddEasingKeyFrame(Duration/2, 1)
-                    .AddEasingKeyFrame(Duration, 0),
-            };
         }
     }
 
-    public class BounceOutDownAnimation : AnimationDefinition
+    public class BounceOutDownAnimation : BounceOutAnimation
     {
-        public double Amplitude { get; set; }
-        public double Distance { get; set; }
+        public double Distance
+        {
+            get { return DistanceY; }
+            set { DistanceY = value; }
+        }
 
         public BounceOutDownAnimation()
         {
-            Duration = 0.4;
             Distance = 500;
-            Amplitude = 0.4;
-        }
-
-        public override IEnumerable<Timeline> CreateAnimation(FrameworkElement element)
-        {
-            return new Timeline[]
-            {
-                element.AnimateProperty(AnimationProperty.TranslateY)
-                    .AddEasingKeyFrame(0.0, 0)
-                    .AddEasingKeyFrame(Duration, Distance, new BackEase {Amplitude = Amplitude, EasingMode = EasingMode.EaseIn}),
-                element.AnimateProperty(AnimationProperty.Opacity)
-                    .AddEasingKeyFrame(0.0, 1)
-                    .AddEasingKeyFrame(Duration/2, 1)
-                    .AddEasingKeyFrame(Duration, 0),
-            };
         }
     }
 
-    public class BounceOutLeftAnimation : AnimationDefinition
+    public class BounceOutLeftAnimation : BounceOutAnimation
     {
-        public double Amplitude { get; set; }
-        public double Distance { get; set; }
+        public double Distance
+        {
+            get { return DistanceX; }
+            set { DistanceX = value; }
+        }
 
         public BounceOutLeftAnimation()
         {
-            Duration = 0.4;
             Distance = -500;
-            Amplitude = 0.4;
-        }
-
-        public override IEnumerable<Timeline> CreateAnimation(FrameworkElement element)
-        {
-            return new Timeline[]
-            {
-                element.AnimateProperty(AnimationProperty.TranslateX)
-                    .AddEasingKeyFrame(0.0, 0)
-                    .AddEasingKeyFrame(Duration, Distance, new BackEase {Amplitude = Amplitude, EasingMode = EasingMode.EaseIn}),
-                element.AnimateProperty(AnimationProperty.Opacity)
-                    .AddEasingKeyFrame(0.0, 1)
-                    .AddEasingKeyFrame(Duration/2, 1)
-                    .AddEasingKeyFrame(Duration, 0),
-            };
         }
     }
 
-    public class BounceOutRightAnimation : AnimationDefinition
+    public class BounceOutRightAnimation : BounceOutAnimation
     {
-        public double Amplitude { get; set; }
-        public double Distance { get; set; }
+        public double Distance
+        {
+            get { return DistanceX; }
+            set { DistanceX = value; }
+        }
 
         public BounceOutRightAnimation()
         {
-            Duration = 0.4;
             Distance = 500;
-            Amplitude = 0.4;
-        }
-
-        public override IEnumerable<Timeline> CreateAnimation(FrameworkElement element)
-        {
-            return new Timeline[]
-            {
-                element.AnimateProperty(AnimationProperty.TranslateX)
-                    .AddEasingKeyFrame(0.0, 0)
-                    .AddEasingKeyFrame(Duration, Distance, new BackEase {Amplitude = Amplitude, EasingMode = EasingMode.EaseIn}),
-                element.AnimateProperty(AnimationProperty.Opacity)
-                    .AddEasingKeyFrame(0.0, 1)
-                    .AddEasingKeyFrame(Duration/2, 1)
-                    .AddEasingKeyFrame(Duration, 0),
-            };
         }
     }
 

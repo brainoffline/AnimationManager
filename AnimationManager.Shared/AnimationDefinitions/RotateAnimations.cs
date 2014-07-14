@@ -27,11 +27,13 @@ namespace Brain.Animate
     {
         public Double? StartRotation { get; set; }
         public Double? EndRotation { get; set; }
+        public EasingFunctionBase Easing { get; set; }
 
         public RotateAnimation()
         {
             Duration = 1.0;
             StartRotation = 0.0;
+            Easing = new QuadraticEase();
         }
 
         public override IEnumerable<Timeline> CreateAnimation(FrameworkElement element)
@@ -59,7 +61,7 @@ namespace Brain.Animate
 
                 element.AnimateProperty(AnimationProperty.Rotation)
                     .AddEasingKeyFrame(0.0, startRotation)
-                    .AddEasingKeyFrame(Duration, endRotation, new QuadraticEase())
+                    .AddEasingKeyFrame(Duration, endRotation, Easing)
                     .AddDiscreteKeyFrame(Duration, startRotation),
             };
         }

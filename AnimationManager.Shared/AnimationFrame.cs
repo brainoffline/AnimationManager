@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Phone.UI.Input;
 using Brain.Animate.NavigationAnimations;
 #if WINDOWS_81_PORTABLE || NETFX_CORE
 
@@ -47,7 +48,32 @@ namespace Brain.Animate
             DefaultStyleKey = typeof(AnimationFrame);
 
             Navigating += OnNavigating;
+
+#if WINDOWS_PHONE_APP
+            HardwareButtons.BackPressed += HardwareButtons_BackPressed;
+#endif
         }
+
+#if WINDOWS_PHONE_APP
+
+        private bool animatingBack;
+
+        private async void HardwareButtons_BackPressed(object sender, BackPressedEventArgs e)
+        {
+            if (e.Handled) return;
+
+            if (CanGoBack)
+            {
+                e.Handled = true;
+                animatingBack = true;
+
+                await AnimationTrigger.AnimateClose();
+
+                animatingBack = false;
+                GoBack();
+            }
+        }
+#endif
 
         private void OnBackKeyPress(object sender, CancelEventArgs cancelEventArgs)
         {

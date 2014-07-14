@@ -13,6 +13,8 @@ namespace Brain.Animate
     {
         public const string Opacity = "(UIElement.Opacity)";
 
+        public const string BackgroundColor = "(Control.Background).(SolidColorBrush.Color)";
+
         public const string RenderTransformOrigin = "(UIElement.RenderTransformOrigin)";
 
         public const string TranslateX = "(UIElement.RenderTransform).(CompositeTransform.TranslateX)";

@@ -25,6 +25,8 @@ namespace Brain.Animate
         }
         public override IEnumerable<Timeline> CreateAnimation(FrameworkElement element)
         {
+            var transform = GetTransform(element);
+
             return new Timeline[]
             {
                 element.AnimatePointProperty(AnimationProperty.RenderTransformOrigin)
@@ -35,9 +37,9 @@ namespace Brain.Animate
                     .AddEasingKeyFrame(Duration*0.6, 1),
 
                 element.AnimateProperty(AnimationProperty.TranslateX)
-                    .AddEasingKeyFrame(0.0, 700)
-                    .AddEasingKeyFrame(Duration*0.6, -30, new QuadraticEase())
-                    .AddEasingKeyFrame(Duration*0.8, 0),
+                    .AddEasingKeyFrame(0.0, transform.TranslateX + 700)
+                    .AddEasingKeyFrame(Duration*0.6, transform.TranslateX - 30, new QuadraticEase())
+                    .AddEasingKeyFrame(Duration*0.8, transform.TranslateX),
 
                 element.AnimateProperty(AnimationProperty.SkewX)
                     .AddEasingKeyFrame(0.0, -30)
@@ -57,6 +59,8 @@ namespace Brain.Animate
 
         public override IEnumerable<Timeline> CreateAnimation(FrameworkElement element)
         {
+            var transform = GetTransform(element);
+
             return new Timeline[]
             {
                 element.AnimatePointProperty(AnimationProperty.RenderTransformOrigin)
@@ -67,8 +71,8 @@ namespace Brain.Animate
                     .AddEasingKeyFrame(Duration, 0),
 
                 element.AnimateProperty(AnimationProperty.TranslateX)
-                    .AddEasingKeyFrame(0.0, 0)
-                    .AddEasingKeyFrame(Duration, 700),
+                    .AddEasingKeyFrame(0.0, transform.TranslateX)
+                    .AddEasingKeyFrame(Duration, transform.TranslateX + 700),
 
                 element.AnimateProperty(AnimationProperty.SkewX)
                     .AddEasingKeyFrame(0.0, 0)
@@ -88,6 +92,8 @@ namespace Brain.Animate
 
         public override IEnumerable<Timeline> CreateAnimation(FrameworkElement element)
         {
+            var transform = GetTransform(element);
+
             return new Timeline[]
             {
                 element.AnimatePointProperty(AnimationProperty.RenderTransformOrigin)
@@ -98,9 +104,9 @@ namespace Brain.Animate
                     .AddEasingKeyFrame(Duration, 1),
 
                 element.AnimateProperty(AnimationProperty.TranslateX)
-                    .AddEasingKeyFrame(0.0, -700)
-                    .AddEasingKeyFrame(Duration*0.6, 30, new QuadraticEase())
-                    .AddEasingKeyFrame(Duration*0.8, 0),
+                    .AddEasingKeyFrame(0.0, transform.TranslateX - 700)
+                    .AddEasingKeyFrame(Duration*0.6, transform.TranslateX + 30, new QuadraticEase())
+                    .AddEasingKeyFrame(Duration*0.8, transform.TranslateX),
 
                 element.AnimateProperty(AnimationProperty.SkewX)
                     .AddEasingKeyFrame(0.0, 30)
@@ -120,6 +126,8 @@ namespace Brain.Animate
 
         public override IEnumerable<Timeline> CreateAnimation(FrameworkElement element)
         {
+            var transform = GetTransform(element);
+
             return new Timeline[]
             {
                 element.AnimatePointProperty(AnimationProperty.RenderTransformOrigin)
@@ -130,8 +138,8 @@ namespace Brain.Animate
                     .AddEasingKeyFrame(Duration, 0),
 
                 element.AnimateProperty(AnimationProperty.TranslateX)
-                    .AddEasingKeyFrame(0.0, 0)
-                    .AddEasingKeyFrame(Duration, -700),
+                    .AddEasingKeyFrame(0.0, transform.TranslateX)
+                    .AddEasingKeyFrame(Duration, transform.TranslateX - 700),
 
                 element.AnimateProperty(AnimationProperty.SkewX)
                     .AddEasingKeyFrame(0.0, 0)

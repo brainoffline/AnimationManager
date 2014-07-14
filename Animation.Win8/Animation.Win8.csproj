@@ -193,15 +193,15 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\AnimationManager.Win8\AnimationManager.Win8.csproj">
-      <Project>{febaac62-9d8c-4c6c-9b26-7620c7abc122}</Project>
-      <Name>AnimationManager.Win8</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Reference Include="WinRTXamlToolkit">
       <HintPath>..\packages\WinRTXamlToolkit.1.5.4.2\lib\netcore451\WinRTXamlToolkit.dll</HintPath>
     </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AnimationManager.Portable\AnimationManager.Portable.csproj">
+      <Project>{6c996f92-8b49-4001-b87b-9e04f41dda50}</Project>
+      <Name>AnimationManager.Portable</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '12.0' ">
     <VisualStudioVersion>12.0</VisualStudioVersion>

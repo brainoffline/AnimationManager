@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
         <id>AnimationManager</id>
-        <version>0.5.1.81</version>
+        <version>0.5.1.83</version>
         <authors>Brian Donovan-Smith</authors>
         <owners>Brian Donovan-Smith</owners>
         <iconUrl>http://download-codeplex.sec.s-msft.com/Download?ProjectName=AnimationManager%26DownloadId=776458</iconUrl>
@@ -13,8 +13,14 @@
         <tags>XAML Animation</tags>
     </metadata>
     <files>
-      <!-- file src="AnimationManager.Win8.dll" target="lib\netcore451\AnimationManager.Win8.dll" / -->
-      <file src="AnimationManager.WP8.dll" target="lib\wp8\AnimationManager.WP8.dll" />
-      <file src="AnimationManager.portable.dll" target="lib\portable-win8+wpa81\AnimationManager.portable.dll" />
+
+      <file src="lib\portable-win8+wpa81\AnimationManager.Portable.dll" target="lib\portable-win8+wpa81\AnimationManager.Portable.dll" />
+      <file src="lib\portable-win8+wpa81\AnimationManager.Portable.pdb" target="lib\portable-win8+wpa81\AnimationManager.Portable.pdb" />
+      <file src="lib\portable-win8+wpa81\AnimationManager.Portable.pri" target="lib\portable-win8+wpa81\AnimationManager.Portable.pri" />
+      <file src="lib\portable-win8+wpa81\AnimationManager.Portable\" target="lib\portable-win8+wpa81\AnimationManager.Portable\" />
+
+      <file src="lib\wp8\AnimationManager.WP8.dll" target="lib\wp8\AnimationManager.WP8.dll" />
+      <file src="lib\wp8\AnimationManager.WP8.pdb" target="lib\wp8\AnimationManager.WP8.pdb" />
+
     </files>
 </package>

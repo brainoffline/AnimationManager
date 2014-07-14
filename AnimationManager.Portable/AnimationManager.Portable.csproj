@@ -44,10 +44,8 @@
   <Import Project="..\AnimationManager.Shared\AnimationManager.Shared.projitems" Label="Shared" Condition="Exists('..\AnimationManager.Shared\AnimationManager.Shared.projitems')" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy "$(TargetPath)" "$(SolutionDir)NugetPackage"
-mkdir c:\NuGet
-"$(SolutionDir).nuget\nuget" pack "$(SolutionDir)NugetPackage\Package.nuspec" -OutputDirectory "c:\NuGet
-</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

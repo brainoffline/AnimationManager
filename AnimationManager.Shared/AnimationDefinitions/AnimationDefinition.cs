@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-
+using Windows.UI.Xaml.Media;
 #if NETFX_CORE || WINDOWS_81_PORTABLE
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media.Animation;
@@ -29,6 +29,22 @@ namespace Brain.Animate
         protected AnimationDefinition()
         {
             Duration = 1.0;
+        }
+
+        protected CompositeTransform GetTransform(FrameworkElement element)
+        {
+            var transform = element.RenderTransform as CompositeTransform;
+            if (transform == null)
+                element.RenderTransform = transform = new CompositeTransform();
+            return transform;
+        }
+
+        protected PlaneProjection GetProjection(FrameworkElement element)
+        {
+            var projection = element.Projection as PlaneProjection;
+            if (projection == null)
+                element.Projection = projection = new PlaneProjection();
+            return projection;
         }
 
         public abstract IEnumerable<Timeline> CreateAnimation(FrameworkElement element);
