@@ -36,6 +36,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)DropShaddow.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\DependencyObjectExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\ItemsControlExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\NavigationExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\StoryboardExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ListAnimation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NavigationAnimations\NavigationAnimationDefinition.cs" />

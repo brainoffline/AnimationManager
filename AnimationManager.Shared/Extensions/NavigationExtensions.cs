@@ -1,41 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Navigation;
+using Windows.UI.Xaml.Controls;
 
-#if WINDOWS_PHONE
-using Microsoft.Phone.Controls;
-#endif
-
-namespace Brain.Animate
+namespace Brain.Animate.Extensions
 {
     public static class NavigationExtensions
     {
         public static bool NavigateTo(
-            this NavigationService navigationService, 
-            Uri source, 
+            this Frame f, 
+            Type source, 
             AnimationDefinition closeAnimation,
             AnimationDefinition openAnimation,
             bool sequential)
         {
-#if NETFX_CORE || WINDOWS_81_PORTABLE
-            var frame = Window.Current.Content as AnimationFrame;
-#elif WINDOWS_PHONE
-            var frame = Application.Current.RootVisual as AnimationFrame;
-#endif
+            var frame = f as AnimationFrame;
 
             if (frame != null)
                 frame.SetNextNavigationAnimation(closeAnimation, openAnimation, sequential);
 
-            return navigationService.Navigate(source);
+            return f.Navigate(source);
         }
 
 
-#if WINDOWS_PHONE
-        public static async void AnimateClose(this PhoneApplicationFrame frame)
+        public static async void AnimateClose(this Frame frame)
         {
             var animations = new List<Task>();
             foreach (var element in AnimationTrigger.CloseElements.ToList())
@@ -47,7 +36,6 @@ namespace Brain.Animate
 
             await Task.WhenAll(animations.ToArray());
         }
-#endif
 
     }
 }

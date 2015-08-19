@@ -9,7 +9,7 @@
     <Application.Resources>
     	<ResourceDictionary>
     		<ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="ms-appx:///AnimationManager.Win8/Themes/Generic.xaml"/>
+                <ResourceDictionary Source="Themes/Generic.xaml"/>
                 <ResourceDictionary Source="Styles.xaml"/>
     		</ResourceDictionary.MergedDictionaries>
     		<bam:ValueToVisibility x:Key="ValueToVisibility" />

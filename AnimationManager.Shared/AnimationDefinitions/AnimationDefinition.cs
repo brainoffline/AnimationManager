@@ -1,12 +1,14 @@
 ﻿using System.Collections.Generic;
-using Windows.UI.Xaml.Media;
+
 #if NETFX_CORE || WINDOWS_81_PORTABLE
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 #endif
 
 #if WINDOWS_PHONE
 using System.Windows;
+using System.Windows.Media;
 using System.Windows.Media.Animation;
 #endif
 
